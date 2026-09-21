@@ -9,8 +9,6 @@
 ## Live Demo
 https://ayushmaangangulywork-boop.github.io/My-Workflow/
 
----
-
 ## What This Is
 
 MyWorkflow is a **product prototype** — not a tutorial project, not a UI exercise.
@@ -38,7 +36,7 @@ The product answers ten operational questions:
 9. What should happen next?
 10. What actually happened, and who decided?
 
----
+
 
 ## Architecture
 
@@ -79,7 +77,7 @@ configStore.slaPolicy             // Adjust SLA rules per workflow without code
 
 The engines consume configuration dynamically. Adding a new department, workflow, or skill never requires touching engine logic.
 
----
+
 
 ## Screens
 
@@ -96,7 +94,7 @@ The engines consume configuration dynamically. Adding a new department, workflow
 | **Integrations** | SAP MM/SD/WM/FI, CRM, HRMS, Email, ITSM — all active with live event counts and pulse indicators |
 | **Audit Trail** | Full immutable decision log, filterable by entity type, full-text searchable |
 
----
+
 
 ## Everything That Is Clickable
 
@@ -112,7 +110,7 @@ The engines consume configuration dynamically. Adding a new department, workflow
 - **Admin tables** — every row clickable with contextual info; Add buttons write to config and re-render immediately
 - **Allocation Advisory** — Accept logs to audit trail and shows confirmed state; Override requires written reason
 
----
+
 
 ## Key Design Decisions
 
@@ -137,7 +135,7 @@ Every allocation decision, workflow advancement, configuration change, and syste
 **7. Single accent colour**
 Amber is reserved exclusively for things requiring the user's attention — active states, advisories, warnings. Status colours are desaturated earth tones, not neon. Operations interfaces are used under cognitive load for extended periods.
 
----
+
 
 ## Tech Stack
 
@@ -148,7 +146,7 @@ Amber is reserved exclusively for things requiring the user's attention — acti
 | Data | In-memory configuration store + runtime state |
 | Build | None required — opens directly in any browser, works offline |
 
----
+
 
 ## Production Roadmap
 
@@ -161,7 +159,7 @@ Amber is reserved exclusively for things requiring the user's attention — acti
 
 Full schema, all technical decisions, and detailed roadmap in `/docs`.
 
----
+
 
 ## Repository Structure
 
@@ -176,7 +174,7 @@ myworkflow/
 └── README.md
 ```
 
----
+
 
 ## Why This Exists
 
@@ -186,7 +184,7 @@ The problem this solves is real: work flows through mid-to-large organisations v
 
 MyWorkflow is a proof of concept for what a modern, lightweight, configurable alternative could look like.
 
----
+
 
 *Designed and built by Ayushmaan Ganguly*
 ```
