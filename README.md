@@ -1,15 +1,15 @@
 ```markdown
-# MyWorkflow
-### Enterprise Workflow Orchestration & Workforce Intelligence Platform
+ MyWorkflow
+ Enterprise Workflow Orchestration & Workforce Intelligence Platform
 
 > A configuration-driven platform that orchestrates organisational workflows in real time, detects operational bottlenecks, understands workforce skills and capacity, and provides bottleneck-aware allocation recommendations — designed for integration with enterprise systems such as SAP.
 
----
 
-## Live Demo
+
+Live Demo
 https://ayushmaangangulywork-boop.github.io/My-Workflow/
 
-## What This Is
+ What This Is
 
 MyWorkflow is a **product prototype** — not a tutorial project, not a UI exercise.
 
@@ -38,9 +38,11 @@ The product answers ten operational questions:
 
 
 
-## Architecture
+
 
 ```
+## Architecture
+
 CONFIGURATION STORE
         ↓
 BUSINESS LOGIC ENGINES
