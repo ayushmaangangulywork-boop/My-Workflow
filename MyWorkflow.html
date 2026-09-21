@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyWorkflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:       #111009;
+  --bg2:      #181612;
+  --bg3:      #201E1A;
+  --bg4:      #272420;
+  --bg5:      #2E2B26;
+  --b:        #272420;
+  --bm:       #363229;
+  --bl:       #453F36;
+  --t1:       #EAE6E0;
+  --t2:       #A89F94;
+  --t3:       #6A6358;
+  --t4:       #3A3630;
+  --am:  #D97706; --amh:#F59E0B; --aml:#8A4E08; --amb:#160F03;
+  --sg:  #5A9467; --sgh:#6BAF79; --sgl:#274D30; --sgb:#070E09;
+  --rd:  #B83228; --rdh:#D94035; --rdl:#6E1E15; --rdb:#120504;
+  --bl2: #4080B8; --blh:#5090CC; --bll:#1E3E60; --blb:#060C14;
+  --pu:  #7C5BA8; --pul:#3D2B5A; --pub:#0A0612;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --nw:228px; --th:52px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--sans);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bm)}
+button{font-family:inherit;cursor:pointer}input,select,textarea{font-family:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ── SHELL ── */
+#app{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--nw);min-width:var(--nw);background:var(--bg);border-right:1px solid var(--b);display:flex;flex-direction:column;z-index:100}
+#logo{height:var(--th);padding:0 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--b);flex-shrink:0;cursor:pointer}
+#logo:hover .logo-mark{background:var(--amh)}
+.logo-mark{width:28px;height:28px;background:var(--am);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--bg);flex-shrink:0;transition:background .15s}
+.logo-name{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--t1);letter-spacing:.02em;line-height:1}
+.logo-sub{font-family:var(--mono);font-size:8px;color:var(--t3);letter-spacing:.1em;text-transform:uppercase}
+#nav{flex:1;overflow-y:auto;padding:10px 0}
+.ngl{font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.14em;color:var(--t4);padding:14px 18px 4px;text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:pointer;color:var(--t3);font-size:12.5px;border-left:2px solid transparent;transition:color .15s,background .15s;user-select:none;position:relative}
+.ni:hover{background:var(--bg4);color:var(--t2)}
+.ni.on{color:var(--t1);border-left-color:var(--am);background:var(--bg4);font-weight:500}
+.ni .ico{font-size:11px;width:14px;text-align:center;flex-shrink:0;opacity:.7}
+.ni.on .ico,.ni:hover .ico{opacity:1}
+.nb{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:600;padding:1px 6px;border-radius:2px}
+.nb-w{background:var(--amb);color:var(--am);border:1px solid var(--aml)}
+.nb-c{background:var(--rdb);color:var(--rd);border:1px solid var(--rdl)}
+.nb-i{background:var(--blb);color:var(--bl2);border:1px solid var(--bll)}
+.nb-g{background:var(--sgb);color:var(--sg);border:1px solid var(--sgl)}
+.nhr{border:none;border-top:1px solid var(--b);margin:8px 0}
+#sfooter{border-top:1px solid var(--b);padding:14px 18px;flex-shrink:0}
+.urow{display:flex;align-items:center;gap:10px;cursor:pointer}
+.urow:hover .uav{border-color:var(--am)}
+.uav{width:28px;height:28px;background:var(--amb);border:1px solid var(--aml);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--am);flex-shrink:0;transition:border-color .15s}
+.uname{font-size:12px;font-weight:600;color:var(--t1);line-height:1.2}
+.urole{font-family:var(--mono);font-size:9px;color:var(--am);letter-spacing:.06em;margin-top:1px}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#topbar{height:var(--th);background:var(--bg2);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0}
+#tb-scr{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--t3);text-transform:uppercase}
+.tsep{width:1px;height:22px;background:var(--bm)}
+#tb-crumb{font-family:var(--mono);font-size:10px;color:var(--t3);display:flex;align-items:center;gap:6px}
+#tb-crumb .ca{color:var(--t2)}
+#tb-r{margin-left:auto;display:flex;align-items:center;gap:12px}
+.tkpi{display:flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--b);background:var(--bg3);cursor:pointer;transition:border-color .15s}
+.tkpi:hover{border-color:var(--bm)}
+.tkpi-l{font-family:var(--mono);font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}
+.tkpi-v{font-family:var(--mono);font-size:13px;font-weight:500}
+.tkpi-v.c{color:var(--rd)}.tkpi-v.w{color:var(--am)}.tkpi-v.g{color:var(--sg)}
+.live{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--sg);letter-spacing:.06em}
+.ldot{width:5px;height:5px;background:var(--sg);border-radius:50%;animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+#clock{font-family:var(--mono);font-size:11px;color:var(--t3)}
+
+/* ── CONTENT ── */
+#content{flex:1;overflow-y:auto;background:var(--bg2)}
+.screen{display:none}.screen.on{display:block}
+
+/* ── TOOLTIP ── */
+.tw{position:relative}
+.tw:hover .tip{display:block}
+.tip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg5);border:1px solid var(--bl);font-family:var(--mono);font-size:9px;color:var(--t2);padding:4px 8px;white-space:nowrap;z-index:200;pointer-events:none}
+
+/* ── PANEL ── */
+.panel{background:var(--bg3);border:1px solid var(--b)}
+.panel+.panel{margin-top:18px}
+.ph{padding:11px 16px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
+.ph-t{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);font-weight:600}
+.ph-a{font-family:var(--mono);font-size:9px;color:var(--am);background:none;border:none;cursor:pointer;letter-spacing:.04em;transition:color .15s}
+.ph-a:hover{color:var(--t1)}
+
+/* ── STAT STRIP ── */
+.sstrip{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--b);background:var(--bg3);margin-bottom:18px}
+.sc{padding:16px 18px;border-right:1px solid var(--b);position:relative;cursor:pointer;transition:background .15s}
+.sc:last-child{border-right:none}
+.sc:hover{background:var(--bg4)}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc.c::before{background:var(--rd)}.sc.w::before{background:var(--am)}.sc.g::before{background:var(--sg)}.sc.b::before{background:var(--bl2)}
+.sc-lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.sc-val{font-family:var(--mono);font-size:30px;font-weight:300;color:var(--t1);line-height:1}
+.sc.c .sc-val{color:var(--rd)}.sc.w .sc-val{color:var(--am)}
+.sc-mini{display:flex;align-items:flex-end;gap:2px;height:22px;margin-top:6px}
+.smb{flex:1;border-radius:1px 1px 0 0;min-height:2px;opacity:.65;transition:opacity .15s}
+.sc:hover .smb{opacity:1}
+.sc-trend{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:4px}
+.sc-trend .up{color:var(--rd)}.sc-trend .dn{color:var(--sg)}
+
+/* ── STATUS TAG ── */
+.stag{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8.5px;font-weight:600;padding:2px 8px;letter-spacing:.04em;white-space:nowrap;border:1px solid}
+.s-ip{background:var(--blb);color:var(--bl2);border-color:var(--bll)}
+.s-ar{background:var(--amb);color:var(--am);border-color:var(--aml)}
+.s-bl{background:var(--rdb);color:var(--rd);border-color:var(--rdl)}
+.s-ok{background:var(--sgb);color:var(--sg);border-color:var(--sgl)}
+.s-pn{background:var(--bg3);color:var(--t3);border-color:var(--bm)}
+.s-dn{background:var(--sgb);color:var(--sg);border-color:var(--sgl)}
+
+/* ── SLA BAR ── */
+.slab{width:90px}
+.slab-t{height:3px;background:var(--bm);margin-bottom:3px}
+.slab-f{height:100%;transition:width .4s}
+.sf-g{background:var(--sg)}.sf-w{background:var(--am)}.sf-c{background:var(--rd)}
+.slab-l{font-family:var(--mono);font-size:8.5px;color:var(--t3)}
+
+/* ── PRIORITY DOT ── */
+.pd{display:inline-block;width:7px;height:7px;border-radius:50%}
+.pd-c{background:var(--rd)}.pd-h{background:var(--am)}.pd-m{background:var(--bl2)}.pd-l{background:var(--t3)}
+
+/* ── STAGE PIPS ── */
+.spips{display:flex;align-items:center;gap:2px;margin-top:3px}
+.spip{width:16px;height:2px;background:var(--bm)}.spip.d{background:var(--sg)}.spip.a{background:var(--am)}
+
+/* ── WORKFLOW TABLE ── */
+.wt{width:100%;border-collapse:collapse}
+.wt th{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:8px 14px;text-align:left;border-bottom:1px solid var(--b);background:var(--bg2);font-weight:500}
+.wt td{padding:10px 14px;border-bottom:1px solid var(--b);vertical-align:middle}
+.wt tr:last-child td{border-bottom:none}
+.wt tbody tr{cursor:pointer;transition:background .15s}
+.wt tbody tr:hover td{background:var(--bg4)}
+
+/* ── BN COMPACT ── */
+.bnc{padding:12px 16px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .15s}
+.bnc:last-child{border-bottom:none}
+.bnc:hover{background:var(--bg4)}
+.bnc-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.bndot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.bndot.c{background:var(--rd)}.bndot.w{background:var(--am)}.bndot.m{background:var(--bl2)}
+.bnc-dept{font-family:var(--mono);font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}
+.bnc-q{margin-left:auto;font-family:var(--mono);font-size:20px;font-weight:300;color:var(--am)}
+.bnc-stage{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.bnc-sym{font-size:11px;color:var(--t2);line-height:1.4}
+.bnc-meta{display:flex;gap:14px;margin-top:5px}
+.bnc-m{font-family:var(--mono);font-size:8.5px;color:var(--t3)}
+.bnc-m b{color:var(--t2)}
+
+/* ── DEPT GRID ── */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b)}
+.dc{background:var(--bg3);padding:12px 14px;cursor:pointer;transition:background .15s}
+.dc:hover{background:var(--bg4)}
+.dc-name{font-size:11.5px;font-weight:600;color:var(--t1);margin-bottom:5px}
+.dc-stats{display:flex;gap:14px}
+.ds{font-family:var(--mono);font-size:9px;color:var(--t3)}
+.ds b{color:var(--t2)}.ds.dw b{color:var(--am)}.ds.dc2 b{color:var(--rd)}
+
+/* ── ACTIVITY ── */
+.ai{padding:10px 16px;border-bottom:1px solid var(--b);display:flex;gap:10px;cursor:pointer;transition:background .15s}
+.ai:last-child{border-bottom:none}
+.ai:hover{background:var(--bg4)}
+.al{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:3px}
+.adot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.adot.g{background:var(--sg)}.adot.w{background:var(--am)}.adot.r{background:var(--rd)}.adot.b{background:var(--bl2)}.adot.p{background:var(--pu)}
+.aconn{width:1px;flex:1;background:var(--b);margin-top:4px;min-height:14px}
+.ab{flex:1}
+.at{font-size:11.5px;color:var(--t2);line-height:1.4}
+.at strong{color:var(--t1);font-weight:500}
+.am2{font-family:var(--mono);font-size:8.5px;color:var(--t3);margin-top:2px}
+
+/* ── SCREEN COMMON ── */
+.sl{padding:24px}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.sh h2{font-family:var(--mono);font-size:18px;font-weight:300;color:var(--t1);letter-spacing:-.02em}
+.sh-sub{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.08em;margin-top:4px;text-transform:uppercase}
+.fbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.fc{font-family:var(--mono);font-size:9.5px;padding:4px 11px;background:var(--bg3);border:1px solid var(--b);color:var(--t3);cursor:pointer;transition:all .15s}
+.fc:hover{background:var(--bg4);color:var(--t2);border-color:var(--bm)}
+.fc.on{background:var(--amb);border-color:var(--aml);color:var(--am)}
+.fsep{width:1px;height:20px;background:var(--bm)}
+.fsrch{font-family:var(--mono);font-size:11px;background:var(--bg3);border:1px solid var(--b);color:var(--t1);padding:4px 11px;outline:none;width:220px;transition:border-color .15s}
+.fsrch::placeholder{color:var(--t3)}
+.fsrch:focus{border-color:var(--aml)}
+
+/* ── MY WORK ── */
+.ws-t{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);padding:14px 0 6px;border-bottom:1px solid var(--b)}
+.trow{display:grid;grid-template-columns:6px 72px 1fr 150px 110px 100px 140px;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--b);cursor:pointer;transition:background .15s;border-radius:0}
+.trow:hover{background:var(--bg4);margin:0 -24px;padding:11px 24px}
+.tn{font-size:12.5px;font-weight:600;color:var(--t1)}
+.twf{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:1px}
+.tsk{font-size:11px;color:var(--t2)}
+.tdue{font-family:var(--mono);font-size:10px;color:var(--t2)}
+.tdue.ov{color:var(--rd)}.tdue.wn{color:var(--am)}
+.tra{display:flex;gap:4px}
+.bxs{font-family:var(--mono);font-size:9px;font-weight:500;padding:3px 9px;border:1px solid;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;transition:all .15s;background:transparent}
+.bxs-e{border-color:var(--bm);color:var(--t3)}.bxs-e:hover{border-color:var(--bl);color:var(--t2);background:var(--bg4)}
+.bxs-d{border-color:var(--sgl);color:var(--sg)}.bxs-d:hover{background:var(--sgb)}
+.bxs-x{border-color:var(--rdl);color:var(--rd)}.bxs-x:hover{background:var(--rdb)}
+
+/* ── WORKFLOWS ── */
+.wf-hdr{display:grid;grid-template-columns:88px 1fr 130px 140px 100px 100px 90px;padding:7px 16px;gap:12px;background:var(--bg);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:10}
+.wfr{display:grid;grid-template-columns:88px 1fr 130px 140px 100px 100px 90px;padding:12px 16px;gap:12px;align-items:center;border-bottom:1px solid var(--b);cursor:pointer;transition:background .15s}
+.wfr:hover{background:var(--bg4)}
+.wfr:last-child{border-bottom:none}
+.col{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);font-weight:500}
+
+/* ── WF DETAIL PANEL ── */
+#wdp-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;align-items:flex-start;justify-content:flex-end}
+#wdp-overlay.on{display:flex}
+#wdp{width:480px;height:100%;background:var(--bg3);border-left:1px solid var(--bl);overflow-y:auto;display:flex;flex-direction:column;animation:slideIn .2s ease}
+@keyframes slideIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.wdph{padding:18px 20px;border-bottom:1px solid var(--b);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0}
+.wdp-id{font-family:var(--mono);font-size:9px;color:var(--t3);margin-bottom:4px}
+.wdp-name{font-size:16px;font-weight:600;color:var(--t1)}
+.wdp-x{font-size:18px;color:var(--t3);background:none;border:none;cursor:pointer;transition:color .15s;line-height:1;margin-left:12px;flex-shrink:0}
+.wdp-x:hover{color:var(--t1)}
+.wdp-meta{padding:14px 20px;border-bottom:1px solid var(--b);display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wdf-l{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:3px}
+.wdf-v{font-size:12.5px;color:var(--t1);font-weight:500}
+.wdp-sec{padding:16px 20px;border-bottom:1px solid var(--b)}
+.wdp-st{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:12px}
+.sf-flow{display:flex;align-items:center;flex-wrap:wrap;gap:0}
+.sf-node{display:flex;align-items:center}
+.sfb{padding:8px 12px;border:1px solid var(--bm);background:var(--bg2);font-size:11px;font-weight:500;color:var(--t2);white-space:nowrap;cursor:pointer;transition:all .15s}
+.sfb:hover{border-color:var(--bl);color:var(--t1)}
+.sfb.sd{border-color:var(--sgl);background:var(--sgb);color:var(--sg)}
+.sfb.sa{border-color:var(--aml);background:var(--amb);color:var(--am)}
+.sfarr{font-family:var(--mono);font-size:11px;color:var(--bl);padding:0 4px}
+.tl-item{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--b)}
+.tl-item:last-child{border-bottom:none}
+.tl-t{font-size:11.5px;color:var(--t2);line-height:1.4}
+.tl-t strong{color:var(--t1);font-weight:500}
+.tl-ts{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px}
+.wdp-actions{padding:16px 20px;display:flex;gap:8px;flex-shrink:0;margin-top:auto;border-top:1px solid var(--b)}
+
+/* ── BOTTLENECKS ── */
+.bn-card{background:var(--bg3);border:1px solid var(--b);margin-bottom:14px;transition:border-color .15s}
+.bn-card:hover{border-color:var(--bm)}
+.bn-top2{display:flex;gap:0}
+.bn-bar{width:3px;flex-shrink:0}
+.bn-bar.c{background:var(--rd)}.bn-bar.w{background:var(--am)}.bn-bar.m{background:var(--bl2)}
+.bn-body{flex:1;padding:16px 20px}
+.bn-rt{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.bn-dept{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:3px}
+.bn-title{font-size:15px;font-weight:600;color:var(--t1)}
+.bn-sym{font-size:12px;color:var(--t2);margin-top:2px;line-height:1.4}
+.bn-qbig{font-family:var(--mono);font-size:40px;font-weight:300;color:var(--am);line-height:1;text-align:right}
+.bn-ql{font-family:var(--mono);font-size:8.5px;color:var(--t3);text-align:right;margin-top:2px}
+.bn-sigs{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--b);border:1px solid var(--b);margin:10px 0}
+.bn-sig{background:var(--bg2);padding:8px 12px;cursor:pointer;transition:background .15s}
+.bn-sig:hover{background:var(--bg4)}
+.bn-sl{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:3px}
+.bn-sv{font-family:var(--mono);font-size:14px;font-weight:500}
+.bn-sv.g{color:var(--sg)}.bn-sv.w{color:var(--am)}.bn-sv.c{color:var(--rd)}
+.bn-ab{margin:10px 0}
+.bn-al{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:4px}
+.bn-at{font-size:11.5px;color:var(--t2);line-height:1.55}
+.bn-impact{background:var(--amb);border:1px solid var(--aml);padding:9px 13px;margin:10px 0;font-size:11.5px;color:var(--t2);line-height:1.5}
+.bn-impact strong{color:var(--am)}
+.bn-fix{border:1px solid var(--bm);margin:10px 0}
+.bn-fh{padding:8px 13px;background:var(--bg);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
+.bn-ft{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--am);font-weight:600}
+.bn-fe{font-family:var(--mono);font-size:9px;color:var(--t3)}
+.bn-fs{display:flex;gap:10px;padding:9px 13px;border-bottom:1px solid var(--b);transition:background .15s;cursor:pointer}
+.bn-fs:last-child{border-bottom:none}
+.bn-fs:hover{background:var(--bg4)}
+.bn-fsl{font-family:var(--mono);font-size:8.5px;font-weight:600;color:var(--am);width:88px;flex-shrink:0;padding-top:1px;text-transform:uppercase;letter-spacing:.04em}
+.bn-fst{font-size:11.5px;color:var(--t2);line-height:1.5}
+.bn-foot{display:flex;align-items:center;gap:8px;padding:10px 0 4px}
+.bskl{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 7px;background:var(--bg2);border:1px solid var(--bm);color:var(--t2);margin-right:4px;cursor:pointer;transition:border-color .15s}
+.bskl:hover{border-color:var(--bl);color:var(--t1)}
+
+/* ── ALLOCATION ── */
+.ac{background:var(--bg3);border:1px solid var(--b);margin-bottom:18px;transition:border-color .15s}
+.ac:hover{border-color:var(--bm)}
+.ac-hdr{padding:15px 18px;border-bottom:1px solid var(--b);display:flex;align-items:flex-start;justify-content:space-between}
+.ac-title{font-size:14px;font-weight:600;color:var(--t1)}
+.ac-sub{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px}
+.ac-sla{text-align:right}
+.ac-slal{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:2px}
+.ac-slav{font-family:var(--mono);font-size:20px;font-weight:500}
+.ac-ctx{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border-bottom:1px solid var(--b);padding:12px 18px;gap:16px}
+.acl{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:2px}
+.acv{font-family:var(--mono);font-size:11.5px;color:var(--t1);font-weight:500}
+.acv.w{color:var(--am)}.acv.c{color:var(--rd)}
+.ct2{width:100%;border-collapse:collapse}
+.ct2 th{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:8px 18px;text-align:left;border-bottom:1px solid var(--b);background:var(--bg);font-weight:500}
+.ct2 td{padding:11px 18px;border-bottom:1px solid var(--b)}
+.ct2 tr:last-child td{border-bottom:none}
+.ct2 tr.rec td{background:var(--amb)}
+.ct2 tr:not(.rec):hover td{background:var(--bg4);cursor:pointer}
+.cn{font-size:12.5px;font-weight:600;color:var(--t1)}
+.cr{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:1px}
+.crec{font-family:var(--mono);font-size:8.5px;font-weight:700;padding:2px 8px;background:var(--am);color:var(--bg);letter-spacing:.05em}
+.srow{display:flex;align-items:center;gap:7px}
+.str{flex:1;height:3px;background:var(--bm)}
+.sfi{height:100%}
+.sf-hi{background:var(--sg)}.sf-md{background:var(--am)}.sf-lo{background:var(--rd)}
+.sv{font-family:var(--mono);font-size:10px;color:var(--t2);width:30px;text-align:right}
+.ac-reason{padding:10px 18px;background:var(--bg2);border-top:1px solid var(--b);border-bottom:1px solid var(--b);font-size:11.5px;color:var(--t2);line-height:1.5}
+.ac-reason span{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-right:8px}
+.ac-foot{padding:12px 18px;display:flex;align-items:center;gap:8px}
+.ac-done{padding:10px 18px;background:var(--sgb);border-top:1px solid var(--sgl);font-family:var(--mono);font-size:10px;color:var(--sg);display:flex;align-items:center;gap:8px}
+
+/* ── WORKFORCE ── */
+.wkg{display:grid;gap:1px;background:var(--b);border:1px solid var(--b)}
+.wkg-hdr{background:var(--bg);display:grid;grid-template-columns:200px 1fr 80px 140px 90px 90px 100px;padding:7px 14px;gap:12px}
+.erow{background:var(--bg3);display:grid;grid-template-columns:200px 1fr 80px 140px 90px 90px 100px;padding:10px 14px;gap:12px;align-items:center;cursor:pointer;transition:background .15s}
+.erow:hover{background:var(--bg4)}
+.en{font-size:12.5px;font-weight:600;color:var(--t1)}
+.eid{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:1px}
+.sk{display:inline-block;font-family:var(--mono);font-size:8.5px;padding:1px 6px;border:1px solid var(--bm);color:var(--t2);margin:1px 2px 1px 0;background:var(--bg2);cursor:pointer;transition:all .15s}
+.sk:hover{border-color:var(--bl);color:var(--t1)}
+.sk.adv{border-color:var(--sgl);color:var(--sg)}.sk.int{border-color:var(--bll);color:var(--bl2)}
+.uw{display:flex;align-items:center;gap:6px}
+.utr{flex:1;height:4px;background:var(--bm)}
+.ufi{height:100%;transition:width .4s}
+.uf-g{background:var(--sg)}.uf-w{background:var(--am)}.uf-c{background:var(--rd)}
+.upc{font-family:var(--mono);font-size:10px;color:var(--t2);width:34px;text-align:right}
+
+/* ── ANALYTICS ── */
+.ang{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.anw{background:var(--bg3);border:1px solid var(--b);padding:18px;transition:border-color .15s}
+.anw:hover{border-color:var(--bm)}
+.anw.full{grid-column:1/-1}
+.ant{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:14px;font-weight:500}
+.bnum{font-family:var(--mono);font-size:36px;font-weight:300;color:var(--t1);line-height:1}
+.bnums{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:4px}
+.spkl{display:flex;align-items:flex-end;gap:3px;height:56px;cursor:crosshair;position:relative}
+.spkb{flex:1;border-radius:1px 1px 0 0;min-height:3px;transition:opacity .15s,filter .15s;cursor:pointer}
+.spkb:hover{opacity:1!important;filter:brightness(1.3)}
+.spkb.g{background:var(--sg)}.spkb.w{background:var(--am)}.spkb.r{background:var(--rd)}.spkb.b{background:var(--bl2)}
+.clbls{display:flex;justify-content:space-between;margin-top:5px}
+.clbl{font-family:var(--mono);font-size:8px;color:var(--t3)}
+.brow{display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer;transition:opacity .15s}
+.brow:hover{opacity:.8}
+.brl{font-family:var(--mono);font-size:10px;color:var(--t2);width:170px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brt{flex:1;height:4px;background:var(--bm)}
+.brf{height:100%;transition:width .6s}
+.brv{font-family:var(--mono);font-size:10px;width:36px;text-align:right}
+
+/* ── ADMIN ── */
+.atabs{display:flex;border-bottom:1px solid var(--b);margin-bottom:20px}
+.atab{font-family:var(--mono);font-size:10px;padding:10px 16px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+.atab:hover{color:var(--t2)}
+.atab.on{color:var(--t1);border-bottom-color:var(--am)}
+.admt{width:100%;border-collapse:collapse}
+.admt th{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:8px 12px;text-align:left;border-bottom:1px solid var(--b);background:var(--bg);font-weight:500}
+.admt td{padding:9px 12px;border-bottom:1px solid var(--b);font-size:12px;color:var(--t2);transition:background .15s}
+.admt tr:hover td{background:var(--bg4);cursor:pointer}
+.admt td.pr{color:var(--t1);font-weight:500}
+.adm-add{font-family:var(--mono);font-size:10px;padding:8px 12px;background:transparent;border:1px dashed var(--bm);color:var(--t3);cursor:pointer;width:100%;text-align:left;transition:color .15s,border-color .15s}
+.adm-add:hover{color:var(--am);border-color:var(--aml)}
+.pr-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pr-lbl{font-family:var(--mono);font-size:11px;color:var(--t2);width:200px;flex-shrink:0}
+.pr-inp{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--b);color:var(--t1);padding:5px 10px;outline:none;width:70px;transition:border-color .15s}
+.pr-inp:focus{border-color:var(--aml)}
+.pr-tr{flex:1;height:4px;background:var(--bm)}
+.pr-fi{height:100%;background:var(--am);transition:width .3s}
+.pt{font-family:var(--mono);font-size:11px;font-weight:600;margin-top:8px}
+.pt.ok{color:var(--sg)}.pt.er{color:var(--rd)}
+.ds-wrap{background:var(--bg);border:1px solid var(--b);padding:24px}
+.ds-flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px 0}
+.ds-node{display:flex;align-items:center}
+.dsb{padding:10px 14px;border:1px solid var(--bm);background:var(--bg3);cursor:pointer;transition:all .15s;min-width:110px;text-align:center}
+.dsb:hover{border-color:var(--bl);background:var(--bg4)}
+.dsb.dsd{border-color:var(--sgl);background:var(--sgb)}.dsb.dsa{border-color:var(--aml);background:var(--amb)}
+.dsb-n{font-size:11px;font-weight:500;color:var(--t1)}
+.dsb-r{font-family:var(--mono);font-size:8.5px;color:var(--t3);margin-top:3px}
+.ds-arr{font-family:var(--mono);font-size:13px;color:var(--bl);padding:0 8px}
+
+/* ── INTEGRATIONS ── */
+.int-row{border-bottom:1px solid var(--b)}
+.int-row:last-child{border-bottom:none}
+.int-main{display:flex;align-items:center;padding:12px 16px;gap:12px;cursor:pointer;transition:background .15s}
+.int-main:hover{background:var(--bg4)}
+.int-name{font-size:12.5px;font-weight:600;color:var(--t1)}
+.int-type{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:1px}
+.ibadge{font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 8px;border:1px solid}
+.ibadge.act{background:var(--sgb);color:var(--sg);border-color:var(--sgl)}
+.ibadge.ina{background:var(--bg3);color:var(--t3);border-color:var(--bm)}
+.ibadge.err{background:var(--rdb);color:var(--rd);border-color:var(--rdl)}
+.int-pulse{width:6px;height:6px;border-radius:50%;background:var(--sg);animation:blink 2s infinite}
+
+/* ── AUDIT ── */
+.au-hdr{display:grid;grid-template-columns:140px 90px 140px 1fr 100px;padding:7px 14px;gap:12px;background:var(--bg);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:5}
+.au-row{display:grid;grid-template-columns:140px 90px 140px 1fr 100px;padding:9px 14px;border-bottom:1px solid var(--b);gap:12px;align-items:start;cursor:pointer;transition:background .15s}
+.au-row:hover{background:var(--bg4)}
+.au-ts{font-family:var(--mono);font-size:9.5px;color:var(--t3)}
+.au-ac{font-family:var(--mono);font-size:9.5px;color:var(--bl2)}
+.au-an{font-family:var(--mono);font-size:9.5px;color:var(--t2)}
+.au-d{font-size:11.5px;color:var(--t2);line-height:1.4}
+.au-e{font-family:var(--mono);font-size:8.5px;color:var(--t3)}
+
+/* ── MODALS ── */
+.ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;align-items:center;justify-content:center}
+.ovl.on{display:flex}
+.modal{background:var(--bg3);border:1px solid var(--bl);width:520px;max-height:84vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);animation:mIn .15s ease}
+@keyframes mIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+.mhdr{padding:16px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg3);z-index:2}
+.mtitle{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--t1);letter-spacing:.04em;text-transform:uppercase}
+.mx{font-size:18px;color:var(--t3);background:none;border:none;cursor:pointer;line-height:1;transition:color .15s}
+.mx:hover{color:var(--t1)}
+.mbody{padding:20px}
+.mftr{padding:14px 20px;border-top:1px solid var(--b);display:flex;gap:8px;justify-content:flex-end}
+.ff{margin-bottom:15px}.ff:last-child{margin-bottom:0}
+.fl{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);display:block;margin-bottom:5px}
+.fi,.fs,.ft{width:100%;background:var(--bg2);border:1px solid var(--b);color:var(--t1);font-size:12px;padding:7px 11px;outline:none;transition:border-color .15s;border-radius:0}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--aml)}
+.ft{min-height:76px;resize:vertical}.fs{cursor:pointer}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ── BUTTONS ── */
+.btn{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:7px 16px;border:1px solid;cursor:pointer;text-transform:uppercase;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--am);border-color:var(--am);color:var(--bg)}.btn-p:hover{background:var(--amh);border-color:var(--amh)}
+.btn-s{background:transparent;border-color:var(--bm);color:var(--t2)}.btn-s:hover{background:var(--bg4);color:var(--t1);border-color:var(--bl)}
+.btn-g{background:transparent;border-color:transparent;color:var(--t3)}.btn-g:hover{color:var(--t2)}
+.btn-d{background:transparent;border-color:var(--rdl);color:var(--rd)}.btn-d:hover{background:var(--rdb)}
+.btn-sg{background:transparent;border-color:var(--sgl);color:var(--sg)}.btn-sg:hover{background:var(--sgb)}
+
+/* ── NOTIFS ── */
+#notifs{position:fixed;bottom:18px;right:18px;z-index:2000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.notif{background:var(--bg3);border:1px solid var(--bl);border-left:3px solid var(--am);padding:11px 15px;width:310px;pointer-events:auto;animation:nIn .2s ease}
+.notif.g{border-left-color:var(--sg)}.notif.r{border-left-color:var(--rd)}.notif.b{border-left-color:var(--bl2)}
+@keyframes nIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.ntitle{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.nbody{font-size:11px;color:var(--t2);line-height:1.4}
+
+/* ── EMPTY STATE ── */
+.empty{padding:48px 24px;text-align:center}
+.em-m{font-family:var(--mono);font-size:28px;color:var(--t4);margin-bottom:10px}
+.em-t{font-size:14px;font-weight:500;color:var(--t2);margin-bottom:5px}
+.em-s{font-size:12px;color:var(--t3)}
+
+.mono{font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="logo" onclick="navigate('ct')">
+    <div class="logo-mark">MW</div>
+    <div>
+      <div class="logo-name">MyWorkflow</div>
+      <div class="logo-sub">Enterprise Platform</div>
+    </div>
+  </div>
+  <div id="nav">
+    <div class="ni on" data-s="ct"><span class="ico">◈</span>Control Tower</div>
+    <div class="ni" data-s="mw"><span class="ico">▣</span>My Work<span class="nb nb-w" id="nb-mw">6</span></div>
+    <div class="ni" data-s="wf"><span class="ico">⊞</span>Workflows<span class="nb nb-i" id="nb-wf">12</span></div>
+    <div class="ni" data-s="bn"><span class="ico">◉</span>Bottlenecks<span class="nb nb-c">5</span></div>
+    <div class="ni" data-s="al"><span class="ico">⊛</span>Allocation Advisory<span class="nb nb-w">3</span></div>
+    <div class="ni" data-s="wk"><span class="ico">▦</span>Workforce</div>
+    <div class="ni" data-s="an"><span class="ico">◫</span>Analytics</div>
+    <hr class="nhr">
+    <div class="ngl">Administration</div>
+    <div class="ni" data-s="ad"><span class="ico">⊕</span>Configuration</div>
+    <div class="ni" data-s="in"><span class="ico">⊗</span>Integrations</div>
+    <div class="ni" data-s="au"><span class="ico">▤</span>Audit Trail</div>
+  </div>
+  <div id="sfooter">
+    <div class="urow" onclick="showNotif('Profile','Ayushmaan Ganguly · SYS_ADMIN · All Departments','b')">
+      <div class="uav">AG</div>
+      <div><div class="uname">Ayushmaan Ganguly</div><div class="urole">SYS_ADMIN</div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="topbar">
+    <div id="tb-scr">CONTROL TOWER</div>
+    <div class="tsep"></div>
+    <div id="tb-crumb"><span class="ca">Organisation Overview</span></div>
+    <div id="tb-r">
+      <div class="tkpi tw" onclick="navigate('bn')">
+        <div class="tkpi-l">Bottlenecks</div>
+        <div class="tkpi-v c" id="tb-bn">5</div>
+        <div class="tip">View bottleneck analysis</div>
+      </div>
+      <div class="tkpi tw" onclick="navigate('wf')">
+        <div class="tkpi-l">At Risk</div>
+        <div class="tkpi-v w" id="tb-risk">41</div>
+        <div class="tip">Workflows approaching SLA breach</div>
+      </div>
+      <div class="tkpi tw">
+        <div class="tkpi-l">Done Today</div>
+        <div class="tkpi-v g">386</div>
+        <div class="tip">Workflows completed today</div>
+      </div>
+      <div class="tsep"></div>
+      <div class="live"><div class="ldot"></div>LIVE</div>
+      <div class="tsep"></div>
+      <div id="clock" class="mono">--:--:--</div>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- CONTROL TOWER -->
+    <div class="screen on" id="screen-ct">
+      <div style="padding:24px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px">
+          <div>
+            <h1 style="font-family:var(--mono);font-size:22px;font-weight:300;letter-spacing:-.03em;color:var(--t1);line-height:1">Organisation Control Tower</h1>
+            <div style="font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.1em;margin-top:5px;text-transform:uppercase">Real-time operational intelligence · All departments</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:var(--mono);font-size:11px;color:var(--t2)" id="ct-date">—</div>
+            <div style="font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:2px">Last sync: just now</div>
+          </div>
+        </div>
+
+        <div class="sstrip" id="sstrip"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 360px;gap:18px">
+          <div>
+            <div class="panel">
+              <div class="ph"><span class="ph-t">Active Workflow Instances</span><button class="ph-a" onclick="navigate('wf')">View All →</button></div>
+              <table class="wt"><thead><tr><th>ID</th><th>Workflow</th><th>Dept</th><th>Stage</th><th>Status</th><th>SLA</th><th>Priority</th></tr></thead>
+              <tbody id="ct-wf-tbody"></tbody></table>
+            </div>
+            <div class="panel" style="margin-top:18px">
+              <div class="ph"><span class="ph-t">Department Health</span><button class="ph-a" onclick="navigate('wk')">Workforce →</button></div>
+              <div class="dg" id="dg"></div>
+            </div>
+          </div>
+          <div>
+            <div class="panel">
+              <div class="ph"><span class="ph-t">Active Bottlenecks</span><button class="ph-a" onclick="navigate('bn')">Analyse →</button></div>
+              <div id="ct-bn"></div>
+            </div>
+            <div class="panel" style="margin-top:18px">
+              <div class="ph"><span class="ph-t">Activity Feed</span><button class="ph-a" onclick="navigate('au')">Audit →</button></div>
+              <div id="act-feed"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY WORK -->
+    <div class="screen" id="screen-mw">
+      <div class="sl">
+        <div class="sh">
+          <div><h2>My Work</h2><div class="sh-sub">Ayushmaan Ganguly · System Administrator · All Departments</div></div>
+          <button class="btn btn-p" onclick="openM('m-newtask')">+ New Work Item</button>
+        </div>
+        <div class="fbar">
+          <input class="fsrch" placeholder="Search tasks…" oninput="mwSearch(this.value)" id="mw-srch">
+          <div class="fsep"></div>
+          <button class="fc on" onclick="mwFilt('all',this)">All</button>
+          <button class="fc" onclick="mwFilt('Due Now / Overdue',this)">Due Now</button>
+          <button class="fc" onclick="mwFilt('In Progress',this)">In Progress</button>
+          <button class="fc" onclick="mwFilt('Upcoming',this)">Upcoming</button>
+          <button class="fc" onclick="mwFilt('Blocked',this)">Blocked</button>
+          <button class="fc" onclick="mwFilt('Completed',this)">Completed</button>
+        </div>
+        <div id="mw-body"></div>
+      </div>
+    </div>
+
+    <!-- WORKFLOWS -->
+    <div class="screen" id="screen-wf">
+      <div class="sl">
+        <div class="sh">
+          <div><h2>Workflow Instances</h2><div class="sh-sub" id="wf-sub">—</div></div>
+          <button class="btn btn-p" onclick="openM('m-newwf')">+ Initiate Workflow</button>
+        </div>
+        <div class="fbar">
+          <input class="fsrch" placeholder="Search by ID, name, description…" oninput="wfSearch(this.value)" style="width:260px">
+          <div class="fsep"></div>
+          <button class="fc on" onclick="wfFilt('all',this)">All</button>
+          <button class="fc" onclick="wfFilt('IN_PROGRESS',this)">In Progress</button>
+          <button class="fc" onclick="wfFilt('AT_RISK',this)">At Risk</button>
+          <button class="fc" onclick="wfFilt('BLOCKED',this)">Blocked</button>
+          <button class="fc" onclick="wfFilt('COMPLETED',this)">Completed</button>
+          <div class="fsep"></div>
+          <button class="fc" onclick="wfSort('priority')">Sort: Priority</button>
+          <button class="fc" onclick="wfSort('sla')">Sort: SLA</button>
+        </div>
+        <div class="panel">
+          <div class="wf-hdr">
+            <span class="col">ID</span><span class="col">Workflow</span><span class="col">Department</span>
+            <span class="col">Current Stage</span><span class="col">Status</span><span class="col">SLA Used</span><span class="col">Priority</span>
+          </div>
+          <div id="wf-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTLENECKS -->
+    <div class="screen" id="screen-bn">
+      <div class="sl">
+        <div class="sh">
+          <div><h2>Bottleneck Analysis</h2><div class="sh-sub">Multi-signal detection · Configurable thresholds · Fix advisories</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-s" onclick="sortBN()">Sort by Severity</button>
+            <button class="btn btn-s" onclick="openM('m-bnconfig')">⚙ Thresholds</button>
+          </div>
+        </div>
+        <div id="bn-list"></div>
+      </div>
+    </div>
+
+    <!-- ALLOCATION -->
+    <div class="screen" id="screen-al">
+      <div class="sl">
+        <div class="sh">
+          <div><h2>Allocation Advisory</h2><div class="sh-sub">Rule-based configurable intelligence · Manager retains authority · All decisions audited</div></div>
+          <button class="btn btn-s" onclick="openM('m-policy')">⚙ Allocation Policy</button>
+        </div>
+        <div id="al-list"></div>
+      </div>
+    </div>
+
+    <!-- WORKFORCE -->
+    <div class="screen" id="screen-wk">
+      <div class="sl">
+        <div class="sh">
+          <div><h2>Workforce Intelligence</h2><div class="sh-sub">Capacity · Skills · Utilisation</div></div>
+          <button class="btn btn-p" onclick="openM('m-addemp')">+ Add Employee</button>
+        </div>
+        <div class="fbar">
+          <input class="fsrch" placeholder="Search by name or ID…" oninput="wkSearch(this.value)">
+          <div class="fsep"></div>
+          <button class="fc on" onclick="wkFilt('all',this)">All</button>
+          <button class="fc" onclick="wkFilt('DEPT-01',this)">Procurement</button>
+          <button class="fc" onclick="wkFilt('DEPT-02',this)">Finance</button>
+          <button class="fc" onclick="wkFilt('DEPT-04',this)">Warehouse</button>
+          <button class="fc" onclick="wkFilt('DEPT-07',this)">Quality</button>
+          <div class="fsep"></div>
+          <button class="fc" onclick="wkFilt('overloaded',this)">Overloaded</button>
+          <button class="fc" onclick="wkFilt('available',this)">Available</button>
+        </div>
+        <div class="wkg">
+          <div class="wkg-hdr">
+            <span class="col">Employee</span><span class="col">Skills</span><span class="col">Tasks</span>
+            <span class="col">Utilisation</span><span class="col">Free Hrs</span><span class="col">Status</span><span class="col">Dept</span>
+          </div>
+          <div id="wk-rows"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="screen" id="screen-an">
+      <div class="sl">
+        <div class="sh">
+          <div><h2>Operational Analytics</h2><div class="sh-sub">Historical · Strategic · Hover bars for values</div></div>
+        </div>
+        <div class="ang" id="an-grid"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="screen" id="screen-ad">
+      <div class="sl">
+        <div class="sh"><div><h2>Configuration</h2><div class="sh-sub">All entities configurable without code</div></div></div>
+        <div class="atabs">
+          <div class="atab on" onclick="aTab(this,'depts')">Departments</div>
+          <div class="atab" onclick="aTab(this,'wfdefs')">Workflow Definitions</div>
+          <div class="atab" onclick="aTab(this,'skills')">Skill Master</div>
+          <div class="atab" onclick="aTab(this,'roles')">Roles</div>
+          <div class="atab" onclick="aTab(this,'sla')">SLA Policies</div>
+          <div class="atab" onclick="aTab(this,'policy')">Allocation Policy</div>
+          <div class="atab" onclick="aTab(this,'designer')">Workflow Designer</div>
+        </div>
+        <div id="ad-body"></div>
+      </div>
+    </div>
+
+    <!-- INTEGRATIONS -->
+    <div class="screen" id="screen-in">
+      <div class="sl">
+        <div class="sh">
+          <div><h2>Integrations</h2><div class="sh-sub">Enterprise system adapters · Event-driven layer · Configuration-driven mappings</div></div>
+          <button class="btn btn-p" onclick="showNotif('Add Integration','Integration wizard available in production build.','b')">+ Add Integration</button>
+        </div>
+        <div class="panel"><div class="ph"><span class="ph-t">Connected Systems</span></div><div id="int-list"></div></div>
+      </div>
+    </div>
+
+    <!-- AUDIT -->
+    <div class="screen" id="screen-au">
+      <div class="sl">
+        <div class="sh"><div><h2>Audit Trail</h2><div class="sh-sub">Every decision · Every actor · Every timestamp · Immutable log</div></div></div>
+        <div class="fbar">
+          <input class="fsrch" placeholder="Search audit log…" oninput="auSearch(this.value)">
+          <div class="fsep"></div>
+          <button class="fc on" onclick="auFilt('all',this)">All</button>
+          <button class="fc" onclick="auFilt('Allocation',this)">Allocation</button>
+          <button class="fc" onclick="auFilt('Workflow',this)">Workflow</button>
+          <button class="fc" onclick="auFilt('Bottleneck',this)">Bottleneck</button>
+          <button class="fc" onclick="auFilt('Config',this)">Config</button>
+        </div>
+        <div class="panel">
+          <div class="au-hdr">
+            <span class="col">Timestamp</span><span class="col">Actor</span><span class="col">Action</span>
+            <span class="col">Detail</span><span class="col">Entity</span>
+          </div>
+          <div id="au-rows"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- WF DETAIL PANEL -->
+<div id="wdp-overlay" onclick="if(event.target===this)closeWDP()">
+  <div id="wdp">
+    <div class="wdph">
+      <div><div class="wdp-id" id="wdp-id">—</div><div class="wdp-name" id="wdp-name">—</div></div>
+      <button class="wdp-x" onclick="closeWDP()">×</button>
+    </div>
+    <div class="wdp-meta" id="wdp-meta"></div>
+    <div class="wdp-sec"><div class="wdp-st">Workflow Progress</div><div class="sf-flow" id="wdp-stages"></div></div>
+    <div class="wdp-sec"><div class="wdp-st">Activity Timeline</div><div id="wdp-tl"></div></div>
+    <div class="wdp-actions">
+      <button class="btn btn-p" onclick="advStage()">Advance Stage</button>
+      <button class="btn btn-s" onclick="closeWDP()">Close</button>
+      <button class="btn btn-g" style="margin-left:auto" onclick="showNotif('Escalated','Workflow escalated to department head.','w')">Escalate</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="ovl" id="m-newwf">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">Initiate Workflow</span><button class="mx" onclick="closeM('m-newwf')">×</button></div>
+    <div class="mbody">
+      <div class="ff"><label class="fl">Workflow Type</label><select class="fs" id="wf-type-sel"></select></div>
+      <div class="ff"><label class="fl">Description / Reference</label><input class="fi" id="wf-desc" placeholder="Brief description or reference…"></div>
+      <div class="fr">
+        <div class="ff"><label class="fl">Priority</label><select class="fs" id="wf-pri"><option>CRITICAL</option><option>HIGH</option><option selected>MEDIUM</option><option>LOW</option></select></div>
+        <div class="ff"><label class="fl">Requestor</label><input class="fi" id="wf-req" placeholder="Name…"></div>
+      </div>
+      <div class="ff"><label class="fl">Notes</label><textarea class="ft" id="wf-notes" placeholder="Additional context…"></textarea></div>
+    </div>
+    <div class="mftr"><button class="btn btn-g" onclick="closeM('m-newwf')">Cancel</button><button class="btn btn-p" onclick="initWF()">Initiate Workflow</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="m-newtask">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">New Work Item</span><button class="mx" onclick="closeM('m-newtask')">×</button></div>
+    <div class="mbody">
+      <div class="ff"><label class="fl">Task Name</label><input class="fi" id="nt-name" placeholder="Task name…"></div>
+      <div class="fr">
+        <div class="ff"><label class="fl">Priority</label><select class="fs" id="nt-pri"><option value="critical">CRITICAL</option><option value="high">HIGH</option><option value="medium" selected>MEDIUM</option><option value="low">LOW</option></select></div>
+        <div class="ff"><label class="fl">Due Date</label><input class="fi" type="date" id="nt-due"></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label class="fl">Skill Required</label><select class="fs" id="nt-skill"></select></div>
+        <div class="ff"><label class="fl">Section</label><select class="fs" id="nt-section"><option>In Progress</option><option>Upcoming</option><option>Due Now / Overdue</option><option>Blocked</option></select></div>
+      </div>
+    </div>
+    <div class="mftr"><button class="btn btn-g" onclick="closeM('m-newtask')">Cancel</button><button class="btn btn-p" onclick="createTask()">Create Task</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="m-edittask">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">Edit Work Item</span><button class="mx" onclick="closeM('m-edittask')">×</button></div>
+    <div class="mbody">
+      <input type="hidden" id="et-id">
+      <div class="ff"><label class="fl">Task Name</label><input class="fi" id="et-name"></div>
+      <div class="fr">
+        <div class="ff"><label class="fl">Priority</label><select class="fs" id="et-pri"><option value="critical">CRITICAL</option><option value="high">HIGH</option><option value="medium">MEDIUM</option><option value="low">LOW</option></select></div>
+        <div class="ff"><label class="fl">Status</label><select class="fs" id="et-status"><option value="PENDING">PENDING</option><option value="IN_PROGRESS">IN PROGRESS</option><option value="AT_RISK">AT RISK</option><option value="BLOCKED">BLOCKED</option><option value="COMPLETED">COMPLETED</option></select></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label class="fl">Due Label</label><input class="fi" id="et-due" placeholder="e.g. Today 18:00"></div>
+        <div class="ff"><label class="fl">Section</label><select class="fs" id="et-section"><option>Due Now / Overdue</option><option>In Progress</option><option>Upcoming</option><option>Blocked</option><option>Completed</option></select></div>
+      </div>
+      <div class="ff"><label class="fl">Skill Required</label><select class="fs" id="et-skill"></select></div>
+    </div>
+    <div class="mftr">
+      <button class="btn btn-d" onclick="deleteTask(document.getElementById('et-id').value)">Delete</button>
+      <button class="btn btn-g" onclick="closeM('m-edittask')">Cancel</button>
+      <button class="btn btn-p" onclick="saveTask()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="ovl" id="m-addemp">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">Add Employee</span><button class="mx" onclick="closeM('m-addemp')">×</button></div>
+    <div class="mbody">
+      <div class="fr">
+        <div class="ff"><label class="fl">Full Name</label><input class="fi" id="ae-name" placeholder="Full name…"></div>
+        <div class="ff"><label class="fl">Employee ID</label><input class="fi" id="ae-id" placeholder="EMP-…"></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label class="fl">Department</label><select class="fs" id="ae-dept"></select></div>
+        <div class="ff"><label class="fl">Role</label><select class="fs" id="ae-role"></select></div>
+      </div>
+      <div class="fr">
+        <div class="ff"><label class="fl">Daily Capacity (hrs)</label><input class="fi" id="ae-cap" type="number" value="8"></div>
+        <div class="ff"><label class="fl">Committed (hrs)</label><input class="fi" id="ae-com" type="number" value="0"></div>
+      </div>
+    </div>
+    <div class="mftr"><button class="btn btn-g" onclick="closeM('m-addemp')">Cancel</button><button class="btn btn-p" onclick="addEmp()">Add Employee</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="m-policy">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">Allocation Policy</span><button class="mx" onclick="closeM('m-policy')">×</button></div>
+    <div class="mbody">
+      <p style="font-size:11px;color:var(--t2);margin-bottom:18px;line-height:1.5">Weights must sum to exactly 100%. Engine reads the active policy on every evaluation.</p>
+      <div id="pol-rows"></div>
+      <div class="pt" id="pol-total">Total: 100%</div>
+    </div>
+    <div class="mftr"><button class="btn btn-g" onclick="closeM('m-policy')">Cancel</button><button class="btn btn-p" onclick="savePolicy()">Save Policy</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="m-bnconfig">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">Bottleneck Thresholds</span><button class="mx" onclick="closeM('m-bnconfig')">×</button></div>
+    <div class="mbody">
+      <p style="font-size:11px;color:var(--t2);margin-bottom:18px;line-height:1.5">Detection triggers when the minimum signal count is exceeded simultaneously.</p>
+      <div class="fr"><div class="ff"><label class="fl">Queue Size Threshold</label><input class="fi" type="number" value="15"></div><div class="ff"><label class="fl">Ageing Threshold (hours)</label><input class="fi" type="number" value="24"></div></div>
+      <div class="fr"><div class="ff"><label class="fl">SLA Risk Threshold (%)</label><input class="fi" type="number" value="70"></div><div class="ff"><label class="fl">Utilisation Threshold (%)</label><input class="fi" type="number" value="85"></div></div>
+      <div class="fr"><div class="ff"><label class="fl">Detection Window (mins)</label><input class="fi" type="number" value="30"></div><div class="ff"><label class="fl">Min Signal Count</label><input class="fi" type="number" value="3"></div></div>
+    </div>
+    <div class="mftr"><button class="btn btn-g" onclick="closeM('m-bnconfig')">Cancel</button><button class="btn btn-p" onclick="closeM('m-bnconfig');audit('Ganguly','CONFIG_UPDATED','Bottleneck thresholds updated.','Config');showNotif('Saved','Bottleneck engine updated.','g')">Save</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="m-override">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">Override Allocation Advisory</span><button class="mx" onclick="closeM('m-override')">×</button></div>
+    <div class="mbody">
+      <p style="font-size:11px;color:var(--t2);margin-bottom:16px;line-height:1.5">Override reason is mandatory and will be recorded in the audit trail under your name and timestamp.</p>
+      <div class="ff"><label class="fl">Override Reason (required)</label><textarea class="ft" id="or-reason" placeholder="State your reason…"></textarea></div>
+      <div class="ff"><label class="fl">Assigned To</label><input class="fi" id="or-assignee" placeholder="Employee name or ID…"></div>
+    </div>
+    <div class="mftr"><button class="btn btn-g" onclick="closeM('m-override')">Cancel</button><button class="btn btn-d" onclick="submitOverride()">Confirm Override</button></div>
+  </div>
+</div>
+
+<div id="notifs"></div>
+
+<script>
+/* ════ CONFIG STORE ════ */
+const C = {
+  departments:[
+    {id:'DEPT-01',name:'Procurement',  head:'R. Kumar',  hc:14},
+    {id:'DEPT-02',name:'Finance',      head:'S. Mehta',  hc:9},
+    {id:'DEPT-03',name:'Operations',   head:'A. Nair',   hc:22},
+    {id:'DEPT-04',name:'Warehouse',    head:'P. Singh',  hc:18},
+    {id:'DEPT-05',name:'Sales',        head:'M. Sharma', hc:16},
+    {id:'DEPT-06',name:'HR',           head:'D. Patel',  hc:7},
+    {id:'DEPT-07',name:'Quality',      head:'R. Iyer',   hc:11},
+    {id:'DEPT-08',name:'IT',           head:'V. Gupta',  hc:8},
+    {id:'DEPT-09',name:'Legal',        head:'K. Reddy',  hc:4},
+    {id:'DEPT-10',name:'Customer Svc', head:'N. Joshi',  hc:12},
+  ],
+  roles:[
+    {id:'ROLE-01',name:'Procurement Officer',dept:'DEPT-01'},
+    {id:'ROLE-02',name:'Senior Buyer',       dept:'DEPT-01'},
+    {id:'ROLE-03',name:'Finance Analyst',    dept:'DEPT-02'},
+    {id:'ROLE-04',name:'Finance Controller', dept:'DEPT-02'},
+    {id:'ROLE-05',name:'Operations Manager', dept:'DEPT-03'},
+    {id:'ROLE-06',name:'Warehouse Lead',     dept:'DEPT-04'},
+    {id:'ROLE-07',name:'Quality Inspector',  dept:'DEPT-07'},
+    {id:'ROLE-08',name:'IT Administrator',   dept:'DEPT-08'},
+  ],
+  skills:[
+    {id:'SKL-01',name:'SAP MM',             cat:'ERP'},
+    {id:'SKL-02',name:'SAP SD',             cat:'ERP'},
+    {id:'SKL-03',name:'SAP WM',             cat:'ERP'},
+    {id:'SKL-04',name:'SAP FI',             cat:'ERP'},
+    {id:'SKL-05',name:'Procurement',        cat:'Operations'},
+    {id:'SKL-06',name:'Inventory Mgmt',     cat:'Operations'},
+    {id:'SKL-07',name:'Quality Inspection', cat:'Quality'},
+    {id:'SKL-08',name:'Contract Review',    cat:'Legal'},
+    {id:'SKL-09',name:'Financial Analysis', cat:'Finance'},
+    {id:'SKL-10',name:'Data Analysis',      cat:'Analytics'},
+    {id:'SKL-11',name:'Warehouse Ops',      cat:'Operations'},
+    {id:'SKL-12',name:'Customer Service',   cat:'CRM'},
+  ],
+  employees:[
+    {id:'EMP-001',name:'Ayushmaan Ganguly',role:'ROLE-05',dept:'DEPT-03',skills:[{s:'SKL-01',l:'Advanced'},{s:'SKL-05',l:'Advanced'},{s:'SKL-10',l:'Advanced'}],cap:8,com:4.5},
+    {id:'EMP-002',name:'Sneha Mehta',      role:'ROLE-03',dept:'DEPT-02',skills:[{s:'SKL-04',l:'Advanced'},{s:'SKL-09',l:'Advanced'},{s:'SKL-10',l:'Intermediate'}],cap:8,com:7.8},
+    {id:'EMP-003',name:'Arjun Nair',       role:'ROLE-01',dept:'DEPT-01',skills:[{s:'SKL-01',l:'Advanced'},{s:'SKL-05',l:'Advanced'},{s:'SKL-02',l:'Basic'}],cap:8,com:4.1},
+    {id:'EMP-004',name:'Priya Singh',      role:'ROLE-06',dept:'DEPT-04',skills:[{s:'SKL-03',l:'Advanced'},{s:'SKL-11',l:'Advanced'},{s:'SKL-06',l:'Intermediate'}],cap:8,com:8.9},
+    {id:'EMP-005',name:'Manish Sharma',    role:'ROLE-02',dept:'DEPT-01',skills:[{s:'SKL-01',l:'Intermediate'},{s:'SKL-05',l:'Advanced'},{s:'SKL-08',l:'Basic'}],cap:8,com:5.5},
+    {id:'EMP-006',name:'Divya Patel',      role:'ROLE-07',dept:'DEPT-07',skills:[{s:'SKL-07',l:'Advanced'},{s:'SKL-06',l:'Advanced'}],cap:8,com:6.8},
+    {id:'EMP-007',name:'Kartik Reddy',     role:'ROLE-04',dept:'DEPT-02',skills:[{s:'SKL-04',l:'Advanced'},{s:'SKL-09',l:'Intermediate'},{s:'SKL-01',l:'Basic'}],cap:8,com:3.2},
+    {id:'EMP-008',name:'Neha Joshi',       role:'ROLE-01',dept:'DEPT-01',skills:[{s:'SKL-01',l:'Advanced'},{s:'SKL-05',l:'Intermediate'}],cap:8,com:9.2},
+    {id:'EMP-009',name:'Vivek Gupta',      role:'ROLE-08',dept:'DEPT-08',skills:[{s:'SKL-10',l:'Advanced'}],cap:8,com:5.0},
+    {id:'EMP-010',name:'Anita Iyer',       role:'ROLE-07',dept:'DEPT-07',skills:[{s:'SKL-07',l:'Advanced'},{s:'SKL-05',l:'Intermediate'}],cap:8,com:7.1},
+  ],
+  wfDefs:[
+    {id:'WFD-01',name:'Purchase Requisition Approval',dept:'DEPT-01',process:'Procurement',stages:['Request Submitted','Validation','Manager Approval','Procurement Review','PO Creation','Vendor Confirmation','Closure'],reqRole:'ROLE-02',reqSkills:['SKL-01','SKL-05'],slaH:48,priority:'HIGH',trigger:'Manual'},
+    {id:'WFD-02',name:'Goods Receipt Verification',dept:'DEPT-04',process:'Warehouse',stages:['GR Received','Quality Check','Stock Update','Invoice Matching','Closure'],reqRole:'ROLE-06',reqSkills:['SKL-03','SKL-11'],slaH:24,priority:'MEDIUM',trigger:'SAP MM Event'},
+    {id:'WFD-03',name:'Invoice Approval',dept:'DEPT-02',process:'Finance',stages:['Invoice Received','Validation','3-Way Match','Finance Review','Payment Approved','Payment Executed'],reqRole:'ROLE-04',reqSkills:['SKL-04','SKL-09'],slaH:72,priority:'HIGH',trigger:'Manual/SAP'},
+    {id:'WFD-04',name:'Contract Review & Execution',dept:'DEPT-09',process:'Legal',stages:['Contract Received','Legal Review','Risk Assessment','Mgmt Approval','Signature','Archive'],reqRole:'ROLE-01',reqSkills:['SKL-08'],slaH:120,priority:'MEDIUM',trigger:'Manual'},
+    {id:'WFD-05',name:'Quality Non-Conformance',dept:'DEPT-07',process:'Quality',stages:['Issue Raised','Root Cause','Corrective Action','Verification','Closure'],reqRole:'ROLE-07',reqSkills:['SKL-07','SKL-06'],slaH:48,priority:'CRITICAL',trigger:'Manual/System'},
+    {id:'WFD-06',name:'Stock Transfer Order',dept:'DEPT-04',process:'Warehouse',stages:['Transfer Initiated','Pick & Pack','Transit','Receiving','Closure'],reqRole:'ROLE-06',reqSkills:['SKL-03','SKL-11'],slaH:36,priority:'MEDIUM',trigger:'SAP WM Event'},
+    {id:'WFD-07',name:'Sales Order Processing',dept:'DEPT-05',process:'Sales',stages:['Order Received','Credit Check','Confirmation','Dispatch','Invoicing','Closure'],reqRole:'ROLE-01',reqSkills:['SKL-02'],slaH:24,priority:'HIGH',trigger:'SAP SD Event'},
+  ],
+  allocPolicy:{
+    name:'Default Allocation Policy',version:'1.3',
+    factors:[
+      {f:'Skill Compatibility', w:40},
+      {f:'Available Capacity',  w:25},
+      {f:'SLA Pressure',        w:15},
+      {f:'Role Eligibility',    w:10},
+      {f:'Process Experience',  w:10},
+    ]
+  },
+  slaPolicy:[
+    {id:'SLA-01',wf:'WFD-01',warnPct:70,critPct:85,escPct:95,escTo:'OPS_MANAGER'},
+    {id:'SLA-02',wf:'WFD-02',warnPct:60,critPct:80,escPct:90,escTo:'WAREHOUSE_LEAD'},
+    {id:'SLA-03',wf:'WFD-03',warnPct:65,critPct:80,escPct:92,escTo:'FINANCE_CTRL'},
+    {id:'SLA-04',wf:'WFD-05',warnPct:50,critPct:75,escPct:90,escTo:'QUALITY_HEAD'},
+  ],
+  integrations:[
+    {id:'INT-01',name:'SAP MM',        type:'ERP Adapter',  status:'active',lastSync:'2 min ago',  events:1247},
+    {id:'INT-02',name:'SAP SD',        type:'ERP Adapter',  status:'active',lastSync:'5 min ago',  events:834},
+    {id:'INT-03',name:'SAP WM',        type:'ERP Adapter',  status:'active',lastSync:'1 min ago',  events:622},
+    {id:'INT-04',name:'SAP FI',        type:'ERP Adapter',  status:'active',lastSync:'3 min ago',  events:451},
+    {id:'INT-05',name:'CRM System',    type:'REST API',      status:'active',lastSync:'8 min ago',  events:589},
+    {id:'INT-06',name:'HRMS',          type:'Webhook',       status:'active',lastSync:'just now',   events:312},
+    {id:'INT-07',name:'Email Gateway', type:'SMTP Adapter',  status:'active',lastSync:'just now',   events:3801},
+    {id:'INT-08',name:'ITSM Platform', type:'REST API',      status:'active',lastSync:'4 min ago',  events:178},
+  ],
+  deptStats:{
+    'DEPT-01':{active:18,risk:6,blocked:2},
+    'DEPT-02':{active:11,risk:4,blocked:1},
+    'DEPT-03':{active:22,risk:2,blocked:0},
+    'DEPT-04':{active:16,risk:5,blocked:3},
+    'DEPT-05':{active:14,risk:2,blocked:0},
+    'DEPT-06':{active:4, risk:0,blocked:0},
+    'DEPT-07':{active:8, risk:3,blocked:1},
+    'DEPT-08':{active:6, risk:1,blocked:0},
+    'DEPT-09':{active:3, risk:1,blocked:0},
+    'DEPT-10':{active:9, risk:0,blocked:0},
+  }
+};
+
+/* ════ RUNTIME ════ */
+let RT={instances:[],auditLog:[],actFeed:[],nextInst:2049,openWFId:null,wfSF:'all',wfSrch:'',wfSrt:'default',mwF:'all',mwSrch:'',wkF:'all',wkSrch:'',auF:'all',auSrch:'',bnSort:false,allocAcc:{}};
+
+const myTasks=[
+  {id:'TSK-4421',name:'Manager Approval — PR-2024-0441',     wf:'WF-2048',skill:'SAP MM',         due:'Overdue 02:14',dueC:'ov',status:'AT_RISK',   pri:'critical',sec:'Due Now / Overdue'},
+  {id:'TSK-4487',name:'3-Way Match Review — INV-44221',      wf:'WF-2061',skill:'SAP FI',         due:'Due in 05:40', dueC:'wn',status:'AT_RISK',   pri:'high',    sec:'Due Now / Overdue'},
+  {id:'TSK-4401',name:'PO Creation — PR-2024-0438',          wf:'WF-2047',skill:'SAP MM',         due:'Tomorrow 14:00',dueC:'', status:'IN_PROGRESS',pri:'high',    sec:'In Progress'},
+  {id:'TSK-4388',name:'Procurement Review — PR-2024-0435',   wf:'WF-2043',skill:'Procurement',    due:'Today 18:00',  dueC:'wn',status:'IN_PROGRESS',pri:'medium',  sec:'In Progress'},
+  {id:'TSK-4512',name:'Root Cause Investigation — NCR-0082', wf:'WF-2074',skill:'Quality Inspection',due:'Tomorrow 09:00',dueC:'',status:'PENDING', pri:'medium',  sec:'Upcoming'},
+  {id:'TSK-4499',name:'PO Creation — PR-2024-0440',          wf:'WF-2056',skill:'SAP MM',         due:'Overdue 18h',  dueC:'ov',status:'BLOCKED',   pri:'high',    sec:'Blocked'},
+];
+let tCnt=4600;
+
+/* ════ HELPERS ════ */
+const slaC=p=>p<60?'g':p<80?'w':'c';
+const stC=s=>({IN_PROGRESS:'s-ip',AT_RISK:'s-ar',BLOCKED:'s-bl',COMPLETED:'s-dn',PENDING:'s-pn'}[s]||'s-pn');
+const stL=s=>s.replace(/_/g,' ');
+const ut=e=>Math.round((e.com/e.cap)*100);
+const utC=p=>p<=75?'uf-g':p<=90?'uf-w':'uf-c';
+const utS=p=>p>100?{l:'Overloaded',c:'s-bl'}:p>85?{l:'High Load',c:'s-ar'}:p>50?{l:'Active',c:'s-ip'}:{l:'Available',c:'s-ok'};
+const dN=id=>(C.departments.find(d=>d.id===id)||{name:'—'}).name;
+const pdC=p=>({critical:'pd-c',high:'pd-h',medium:'pd-m',low:'pd-l'}[p]||'pd-l');
+const $ =id=>document.getElementById(id);
+
+/* ════ SEED ════ */
+function seed(){
+  [
+    ['WFD-01','CRITICAL','PR-2024-0441 — Office Equipment','A. Kumar',88,1],
+    ['WFD-01','HIGH',    'PR-2024-0440 — Raw Materials Q4','M. Singh',62,2],
+    ['WFD-03','HIGH',    'INV-44221 — Bharat Supplies','S. Mehta',74,3],
+    ['WFD-02','MEDIUM',  'GRN-8831 — Component Batch A7','P. Singh',45,1],
+    ['WFD-05','CRITICAL','NCR-0082 — Surface defect lot 14','A. Iyer',55,1],
+    ['WFD-07','HIGH',    'SO-2024-9912 — Retail Chain Order','Sales',38,2],
+    ['WFD-04','MEDIUM',  'CTR-0234 — Vendor MSA Renewal','K. Reddy',29,3],
+    ['WFD-06','MEDIUM',  'STO-0551 — Warehouse B to C','P. Singh',51,2],
+    ['WFD-03','HIGH',    'INV-44198 — Utility Invoice Oct','S. Mehta',81,4],
+    ['WFD-01','HIGH',    'PR-2024-0438 — Maintenance Parts','A. Ganguly',44,3],
+    ['WFD-02','LOW',     'GRN-8829 — Office Consumables','A. Nair',22,0],
+    ['WFD-07','CRITICAL','SO-2024-9908 — Urgent Order','Sales',91,1],
+  ].forEach(([defId,pri,desc,req,slaUsed,si])=>{
+    const def=C.wfDefs.find(d=>d.id===defId);
+    const id='WF-'+RT.nextInst++;
+    let status='IN_PROGRESS';
+    if(slaUsed>80)status='AT_RISK';
+    if(defId==='WFD-05')status='BLOCKED';
+    RT.instances.push({id,defId,name:def.name,dept:def.dept,stages:def.stages,si,status,pri,desc,req,slaH:def.slaH,slaUsed});
+  });
+  [
+    ['Ganguly','ALLOCATION_ACCEPTED','Advisory accepted: EMP-003 → WF-2048 Manager Approval','Allocation'],
+    ['SYSTEM','BOTTLENECK_DETECTED','BN-01: PR Approval queue=29, ageing=38h, 4 signals above threshold','Bottleneck'],
+    ['Ganguly','ALLOCATION_OVERRIDE','Override on WF-2061: self-assigned instead of advisory EMP-007','Allocation'],
+    ['SYSTEM','SLA_WARNING','WF-2048 SLA at 88%. Escalation triggered for OPS_MANAGER','SLA'],
+    ['SAP_MM','INTEGRATION_EVENT','PR 4500012441 created in SAP MM. WF-2056 auto-initiated.','Integration'],
+    ['Ganguly','WORKFLOW_STAGE_ADVANCE','WF-2061 advanced Validation → 3-Way Match','Workflow'],
+    ['SYSTEM','CAPACITY_ALERT','EMP-004 utilisation 111%. Allocation advisory suppressed.','Capacity'],
+    ['EMP-007','TASK_COMPLETED','Task TSK-4401 completed. Invoice matched and verified.','Task'],
+    ['SYSTEM','BOTTLENECK_CLEARED','BN-03 auto-resolved. Warehouse Quality Check normalised.','Bottleneck'],
+    ['ADMIN','CONFIG_UPDATED','Allocation policy: Skill Compatibility weight changed 35→40%.','Config'],
+  ].forEach(([a,b,c,d])=>audit(a,b,c,d));
+  [
+    ['Allocation accepted — <strong>EMP-003</strong> assigned WF-2048 Manager Approval','g'],
+    ['<strong>BN-01</strong> escalated — PR Approval queue at 29 items','r'],
+    ['WF-2061 Invoice Approval — stage advanced to 3-Way Match','b'],
+    ['SLA warning — WF-2048 at 88% SLA consumed','w'],
+    ['SAP MM event — GRN-8831 created WF-2054','b'],
+    ['<strong>EMP-004</strong> utilisation flagged at 111%','r'],
+    ['Allocation override recorded — WF-2061','w'],
+    ['WF-2047 Contract Review completed','g'],
+    ['NCR raised — WF-2074 Quality Non-Conformance initiated','b'],
+    ['SAP SD — SO-2024-9912 triggered Sales Order workflow','b'],
+  ].reverse().forEach(([t,c])=>actPush(t,c));
+}
+
+function audit(a,b,c,d){RT.auditLog.unshift({ts:new Date().toLocaleString('en-IN',{hour12:false,day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}),actor:a,action:b,detail:c,entity:d})}
+function actPush(t,c){RT.actFeed.unshift({text:t,color:c,ts:'just now'});if(RT.actFeed.length>14)RT.actFeed.pop()}
+
+/* ════ BN DATA ════ */
+function bnData(){return[
+  {id:'BN-01',sev:'c',dept:'Procurement',stage:'Manager Approval',q:29,age:38,slaR:84,util:94,thru:-42,
+   symptom:'29 requisitions pending in Manager Approval.',
+   analysis:'Queue ageing accelerating. Average hold time 38h against 48h SLA. Throughput dropped 42% in 12 hours.',
+   cause:'SAP MM approval capacity constrained. 3 of 4 eligible approvers above utilisation threshold.',
+   impact:'14 downstream PO Creation tasks blocked. 6 vendor confirmations will breach SLA within 4 hours.',
+   reqSkills:['SAP MM','Procurement'],
+   signals:[{l:'Queue',v:'29',c:'c'},{l:'Ageing',v:'38h',c:'c'},{l:'SLA Risk',v:'84%',c:'c'},{l:'Util',v:'94%',c:'c'},{l:'Throughput',v:'-42%',c:'w'}],
+   fix:{eta:'~3–4h if EMP-003 reassigned now',steps:[
+     {l:'Immediate',t:'Reassign Arjun Nair (EMP-003) — highest-fit, 49% utilisation. See Allocation Advisory.'},
+     {l:'Short-term',t:'Lower Manager Approval SLA warning threshold from 70% to 55% to catch queue builds earlier.'},
+     {l:'Structural',t:'Cross-train 2 additional staff on SAP MM approval role. Add via Administration → Skills.'},
+     {l:'Monitoring',t:'Set queue threshold to 15 (currently 20) in Bottleneck Configuration.'},
+   ]}},
+  {id:'BN-02',sev:'w',dept:'Finance',stage:'3-Way Match',q:17,age:19,slaR:72,util:88,thru:-18,
+   symptom:'17 invoices pending 3-Way Match verification.',
+   analysis:'Queue grew 40% in 72 hours. Month-end volume surge. Ageing approaching threshold.',
+   cause:'Finance Analyst headcount insufficient. SAP FI skill limited to 2 staff, both partially loaded.',
+   impact:'7 invoices will breach 72-hour SLA if not processed before 18:00.',
+   reqSkills:['SAP FI','Financial Analysis'],
+   signals:[{l:'Queue',v:'17',c:'w'},{l:'Ageing',v:'19h',c:'w'},{l:'SLA Risk',v:'72%',c:'w'},{l:'Util',v:'88%',c:'w'},{l:'Throughput',v:'-18%',c:'g'}],
+   fix:{eta:'~6h to clear 7 at-risk invoices',steps:[
+     {l:'Immediate',t:'Assign Kartik Reddy (EMP-007, SAP FI Advanced, 40% load) to 3-Way Match queue.'},
+     {l:'Short-term',t:'Batch 3-Way Match reviews into two daily windows (AM/PM) for consistent throughput.'},
+     {l:'Structural',t:'Pre-plan temporary capacity allocation at each month-end cycle.'},
+   ]}},
+  {id:'BN-03',sev:'w',dept:'Warehouse',stage:'Quality Check',q:22,age:11,slaR:68,util:79,thru:-9,
+   symptom:'22 GR items awaiting Quality Check clearance.',
+   analysis:'Inbound volume spike from SAP MM events. Two inspectors assigned to NCR-007 corrective action.',
+   cause:'EMP-006 and EMP-010 on NCR-007. Effective GR inspection capacity reduced by 50%.',
+   impact:'Stock update for 22 items delayed. Dependent invoicing workflows paused.',
+   reqSkills:['Quality Inspection','Inventory Mgmt'],
+   signals:[{l:'Queue',v:'22',c:'w'},{l:'Ageing',v:'11h',c:'g'},{l:'SLA Risk',v:'68%',c:'w'},{l:'Util',v:'79%',c:'g'},{l:'Throughput',v:'-9%',c:'g'}],
+   fix:{eta:'Self-resolving in ~4h if NCR-007 completes',steps:[
+     {l:'Immediate',t:'Reallocate Divya Patel (EMP-006) from NCR-007 for 2 hours to clear backlog.'},
+     {l:'Short-term',t:'Stagger GR processing to prevent pile-up during peak hours 10:00–14:00.'},
+     {l:'Structural',t:'Add second Quality Inspector to GR Verification stage in Warehouse Workflow Definition.'},
+   ]}},
+  {id:'BN-04',sev:'m',dept:'Operations',stage:'Pick & Pack',q:11,age:6,slaR:41,util:71,thru:-5,
+   symptom:'11 stock transfer orders in Pick & Pack.',
+   analysis:'Moderate queue. Ageing within range. Trending upward from shift changeover.',
+   cause:'Afternoon shift changeover reducing effective capacity for ~90 minutes.',
+   impact:'Low immediate SLA risk. Monitor — if queue exceeds 20 by 16:00, act.',
+   reqSkills:['SAP WM','Warehouse Ops'],
+   signals:[{l:'Queue',v:'11',c:'g'},{l:'Ageing',v:'6h',c:'g'},{l:'SLA Risk',v:'41%',c:'g'},{l:'Util',v:'71%',c:'g'},{l:'Throughput',v:'-5%',c:'g'}],
+   fix:{eta:'Expected self-resolve after changeover',steps:[
+     {l:'Monitor',t:'No immediate action. Reassess in 90 minutes after shift changeover completes.'},
+     {l:'Contingency',t:'If queue exceeds 20 items by 16:00, pull one Warehouse resource from lower-priority queue.'},
+   ]}},
+  {id:'BN-05',sev:'c',dept:'Procurement',stage:'PO Creation',q:14,age:52,slaR:91,util:97,thru:-61,
+   symptom:'14 POs blocked behind Manager Approval queue.',
+   analysis:'Downstream effect of BN-01. PO Creation cannot begin until upstream approval resolves. Ageing critical at 52h.',
+   cause:'Root cause is BN-01 (Manager Approval). This is a dependent symptom, not an independent bottleneck.',
+   impact:'6 vendor deadlines will be missed if BN-01 not resolved within 2 hours.',
+   reqSkills:['SAP MM','Procurement'],
+   signals:[{l:'Queue',v:'14',c:'c'},{l:'Ageing',v:'52h',c:'c'},{l:'SLA Risk',v:'91%',c:'c'},{l:'Util',v:'97%',c:'c'},{l:'Throughput',v:'-61%',c:'c'}],
+   fix:{eta:'Blocked until BN-01 resolves — fix BN-01 first',steps:[
+     {l:'Root Cause',t:'Do NOT treat independently. Resolving BN-01 automatically unblocks PO Creation.'},
+     {l:'Escalation',t:'If BN-01 not resolved in 2h, escalate to Department Head and initiate vendor communications.'},
+     {l:'Communication',t:'Draft proactive delay notifications to 6 affected vendors now to protect relationships.'},
+   ]}},
+];}
+
+function allocData(){return[
+  {wfId:'WF-2048',wfName:'Purchase Requisition Approval',taskId:'TSK-4421',taskName:'Manager Approval',
+   reqSkill:'SAP MM — Advanced',reqRole:'Senior Buyer',slaRem:'02:14',slaC:'c',bn:'PR Approval Queue (BN-01)',owner:'Unassigned',
+   cands:[
+     {id:'EMP-003',name:'Arjun Nair',   role:'Procurement Officer',sf:92,cap:51,bn:'High',  sc:88,rec:true},
+     {id:'EMP-005',name:'Manish Sharma',role:'Senior Buyer',        sf:78,cap:31,bn:'Medium',sc:71,rec:false},
+     {id:'EMP-001',name:'A. Ganguly',   role:'Ops Manager',         sf:85,cap:22,bn:'Low',   sc:64,rec:false},
+   ],
+   reason:'Arjun Nair: highest skill compatibility + available capacity + direct BN-01 relief. No conflicts detected.'},
+  {wfId:'WF-2061',wfName:'Invoice Approval',taskId:'TSK-4487',taskName:'3-Way Match Review',
+   reqSkill:'SAP FI — Advanced',reqRole:'Finance Controller',slaRem:'05:40',slaC:'w',bn:'Finance 3-Way Match (BN-02)',owner:'EMP-002 (98% loaded)',
+   cands:[
+     {id:'EMP-007',name:'Kartik Reddy',role:'Finance Controller',sf:88,cap:60,bn:'High', sc:91,rec:true},
+     {id:'EMP-002',name:'Sneha Mehta', role:'Finance Analyst',   sf:95,cap:2, bn:'Low',  sc:58,rec:false},
+   ],
+   reason:'Kartik Reddy: SAP FI qualified, 60% capacity available, high BN-02 relief. Sneha Mehta is at 98% — assigning would worsen the bottleneck.'},
+  {wfId:'WF-2074',wfName:'Quality Non-Conformance',taskId:'TSK-4512',taskName:'Root Cause Investigation',
+   reqSkill:'Quality Inspection — Advanced',reqRole:'Quality Inspector',slaRem:'18:00',slaC:'g',bn:'None active',owner:'Unassigned',
+   cands:[
+     {id:'EMP-006',name:'Divya Patel',role:'Quality Inspector',sf:95,cap:15,bn:'Low',sc:82,rec:true},
+     {id:'EMP-010',name:'Anita Iyer', role:'Quality Inspector',sf:95,cap:11,bn:'Low',sc:74,rec:false},
+   ],
+   reason:'Divya Patel: full skill match, marginally more available capacity than Anita Iyer.'},
+];}
+
+/* ════ RENDER CT ════ */
+function renderCT(){
+  const ins=RT.instances;
+  const aR=ins.filter(i=>i.status==='AT_RISK').length;
+  const bk=ins.filter(i=>i.status==='BLOCKED').length;
+  $('st-active') && null;
+  // stat strip
+  const bars=(vals,cls)=>vals.map(v=>`<div class="smb spkb ${cls}" style="height:${v}px"></div>`).join('');
+  $('sstrip').innerHTML=[
+    {cls:'b',lbl:'Active Work',   val:ins.length+18, trend:'<span class="dn">↓12</span> from yesterday', bars:bars([9,11,9,12,10,10,11,9,11,12,11,12,12],'b')},
+    {cls:'w',lbl:'SLA at Risk',   val:aR+39,         trend:'<span class="up">↑8</span> since 09:00',      bars:bars([4,5,3,4,5,4,6,4,5,6,5,6,7],'w')},
+    {cls:'c',lbl:'Overdue',       val:63,             trend:'<span class="up">↑3</span> vs yesterday',     bars:bars([3,4,3,4,5,4,5,4,5,6,5,6,6],'r')},
+    {cls:'c',lbl:'Blocked',       val:bk+25,          trend:'Dependency holds',                             bars:bars([2,2,2,3,2,3,2,3,3,3,3,4,3],'r')},
+    {cls:'w',lbl:'Unassigned',    val:17,             trend:'Require allocation',                           bars:bars([1,2,1,2,2,2,2,3,2,3,2,3,3],'w')},
+    {cls:'w',lbl:'Bottlenecks',   val:bnData().length,trend:'Active detections',                            bars:bars([1,1,2,1,2,3,1,2,3,2,2,2,2],'w')},
+    {cls:'g',lbl:'Completed Today',val:386,           trend:'<span class="dn">↑23</span> vs yesterday',    bars:bars([8,9,8,9,9,10,9,10,10,11,10,11,11],'g')},
+  ].map((s,i)=>`<div class="sc ${s.cls}" onclick="navigate(${['wf','wf','wf','wf','al','bn','wf'][i]},'${['','AT_RISK','','BLOCKED','','','COMPLETED'][i]}')"  title="${s.lbl}">
+    <div class="sc-lbl">${s.lbl}</div>
+    <div class="sc-val">${s.val}</div>
+    <div class="sc-mini">${s.bars}</div>
+    <div class="sc-trend">${s.trend}</div>
+  </div>`).join('');
+
+  // WF table
+  $('ct-wf-tbody').innerHTML=ins.slice(0,8).map(inst=>{
+    const dept=C.departments.find(d=>d.id===inst.dept);
+    const stage=inst.stages[inst.si]||inst.stages[0];
+    const sc=slaC(inst.slaUsed);
+    const pips=inst.stages.map((_,i)=>`<div class="spip${i<inst.si?' d':i===inst.si?' a':''}"></div>`).join('');
+    return `<tr onclick="openWDP('${inst.id}')">
+      <td><span class="mono" style="font-size:9px;color:var(--t3)">${inst.id}</span></td>
+      <td><div style="font-size:12.5px;font-weight:600;color:var(--t1)">${inst.name}</div><div style="font-family:var(--mono);font-size:9px;color:var(--t3)">${inst.desc}</div></td>
+      <td><span style="font-size:11px;color:var(--t2)">${dept?dept.name:'—'}</span></td>
+      <td><div style="font-size:11.5px;font-weight:600;color:var(--t1)">${stage}</div><div class="spips">${pips}</div></td>
+      <td><span class="stag ${stC(inst.status)}">${stL(inst.status)}</span></td>
+      <td><div class="slab"><div class="slab-t"><div class="slab-f sf-${sc}" style="width:${inst.slaUsed}%"></div></div><div class="slab-l">${inst.slaUsed}% of ${inst.slaH}h</div></div></td>
+      <td><span class="pd ${pdC(inst.pri.toLowerCase())}"></span><span style="font-family:var(--mono);font-size:9px;color:var(--t2);margin-left:5px">${inst.pri}</span></td>
+    </tr>`;
+  }).join('');
+
+  // BN compact
+  $('ct-bn').innerHTML=bnData().map(bn=>`
+    <div class="bnc" onclick="navigate('bn')">
+      <div class="bnc-top"><div class="bndot ${bn.sev}"></div><span class="bnc-dept">${bn.dept}</span><span class="bnc-q">${bn.q}</span></div>
+      <div class="bnc-stage">${bn.stage}</div>
+      <div class="bnc-sym">${bn.symptom}</div>
+      <div class="bnc-meta">
+        <span class="bnc-m">Ageing: <b>${bn.age}h</b></span>
+        <span class="bnc-m">SLA: <b>${bn.slaR}%</b></span>
+        <span class="bnc-m">Util: <b>${bn.util}%</b></span>
+      </div>
+    </div>`).join('');
+
+  // Dept grid
+  $('dg').innerHTML=C.departments.map(d=>{
+    const s=C.deptStats[d.id]||{active:0,risk:0,blocked:0};
+    return `<div class="dc" onclick="navigate('wf')">
+      <div class="dc-name">${d.name}</div>
+      <div class="dc-stats">
+        <span class="ds">Active: <b>${s.active}</b></span>
+        <span class="ds ${s.risk>3?'dw':''}">Risk: <b>${s.risk}</b></span>
+        <span class="ds ${s.blocked>1?'dc2':''}">Blocked: <b>${s.blocked}</b></span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Activity
+  $('act-feed').innerHTML=RT.actFeed.slice(0,8).map((a,i,arr)=>`
+    <div class="ai" onclick="navigate('au')">
+      <div class="al"><div class="adot ${a.color}"></div>${i<arr.length-1?'<div class="aconn"></div>':''}</div>
+      <div class="ab"><div class="at">${a.text}</div><div class="am2">${a.ts}</div></div>
+    </div>`).join('');
+}
+
+/* ════ WF DETAIL ════ */
+function openWDP(id){
+  const inst=RT.instances.find(i=>i.id===id);if(!inst)return;
+  RT.openWFId=id;
+  const dept=C.departments.find(d=>d.id===inst.dept);
+  $('wdp-id').textContent=inst.id;
+  $('wdp-name').textContent=inst.name;
+  $('wdp-meta').innerHTML=`
+    <div><div class="wdf-l">Status</div><div class="wdf-v"><span class="stag ${stC(inst.status)}">${stL(inst.status)}</span></div></div>
+    <div><div class="wdf-l">Priority</div><div class="wdf-v"><span class="pd ${pdC(inst.pri.toLowerCase())}"></span> ${inst.pri}</div></div>
+    <div><div class="wdf-l">Department</div><div class="wdf-v">${dept?dept.name:'—'}</div></div>
+    <div><div class="wdf-l">SLA Used</div><div class="wdf-v" style="color:var(--${slaC(inst.slaUsed)==='c'?'rd':slaC(inst.slaUsed)==='w'?'am':'sg'})">${inst.slaUsed}% of ${inst.slaH}h</div></div>
+    <div><div class="wdf-l">Requestor</div><div class="wdf-v">${inst.req}</div></div>
+    <div><div class="wdf-l">Description</div><div class="wdf-v">${inst.desc}</div></div>`;
+  $('wdp-stages').innerHTML=inst.stages.map((s,i)=>`
+    <div class="sf-node">
+      <div class="sfb ${i<inst.si?'sd':i===inst.si?'sa':''}" onclick="showNotif('Stage','${s} — click Advance Stage to progress workflow.','b')">${s}</div>
+      ${i<inst.stages.length-1?'<div class="sfarr">→</div>':''}
+    </div>`).join('');
+  $('wdp-tl').innerHTML=[
+    {t:'Initiated by '+inst.req,c:'b',ts:'Day 0'},
+    {t:'Validation completed — no issues',c:'g',ts:'Day 0 +2h'},
+    {t:`Currently at: <strong>${inst.stages[inst.si]}</strong>`,c:'w',ts:'Active'},
+    {t:'SLA monitoring: '+inst.slaUsed+'% consumed',c:'w',ts:'Ongoing'},
+  ].map(i=>`<div class="tl-item"><div class="adot ${i.c}" style="flex-shrink:0;margin-top:4px"></div><div><div class="tl-t">${i.t}</div><div class="tl-ts">${i.ts}</div></div></div>`).join('');
+  $('wdp-overlay').classList.add('on');
+}
+function closeWDP(){$('wdp-overlay').classList.remove('on')}
+function advStage(){
+  const inst=RT.instances.find(i=>i.id===RT.openWFId);if(!inst)return;
+  if(inst.si<inst.stages.length-1){
+    inst.si++;
+    if(inst.si===inst.stages.length-1)inst.status='COMPLETED';
+    audit('Ganguly','WORKFLOW_STAGE_ADVANCE',`${inst.id} advanced to ${inst.stages[inst.si]}`,'Workflow');
+    actPush(`<strong>${inst.id}</strong> advanced to ${inst.stages[inst.si]}`,'g');
+    openWDP(inst.id);
+    showNotif('Stage Advanced',`${inst.id} → ${inst.stages[inst.si]}`,'g');
+  } else showNotif('Complete','Workflow is at final stage.','');
+}
+
+/* ════ MY WORK ════ */
+function renderMW(){
+  const secs=['Due Now / Overdue','In Progress','Upcoming','Blocked','Completed'];
+  const q=RT.mwSrch.toLowerCase();const f=RT.mwF;
+  let tasks=myTasks.filter(t=>{
+    if(q&&!t.name.toLowerCase().includes(q)&&!t.id.toLowerCase().includes(q))return false;
+    if(f!=='all'&&t.sec!==f)return false;
+    return true;
+  });
+  const grp={};secs.forEach(s=>grp[s]=[]);
+  tasks.forEach(t=>{if(grp[t.sec])grp[t.sec].push(t);else grp['Upcoming'].push(t)});
+  let html='';let any=false;
+  secs.forEach(sec=>{
+    const ts=grp[sec];if(!ts.length)return;any=true;
+    html+=`<div class="ws-t">${sec} (${ts.length})</div>`;
+    html+=ts.map(t=>`<div class="trow">
+      <div><span class="pd ${pdC(t.pri)}"></span></div>
+      <div><span class="mono" style="font-size:9px;color:var(--t3)">${t.id}</span></div>
+      <div><div class="tn">${t.name}</div><div class="twf">${t.wf}</div></div>
+      <div><span class="tsk">${t.skill}</span></div>
+      <div><span class="tdue ${t.dueC}">${t.due}</span></div>
+      <div><span class="stag ${stC(t.status)}">${stL(t.status)}</span></div>
+      <div class="tra">
+        <button class="bxs bxs-e" onclick="event.stopPropagation();openEditTask('${t.id}')">Edit</button>
+        <button class="bxs bxs-d" onclick="event.stopPropagation();markDone('${t.id}')">Done</button>
+        <button class="bxs bxs-x" onclick="event.stopPropagation();deleteTask('${t.id}')">Del</button>
+      </div>
+    </div>`).join('');
+  });
+  if(!any)html=`<div class="empty"><div class="em-m">○</div><div class="em-t">No tasks match</div><div class="em-s">Adjust filter or search</div></div>`;
+  $('mw-body').innerHTML=html;
+  $('nb-mw').textContent=myTasks.filter(t=>t.sec!=='Completed').length;
+}
+function mwSearch(v){RT.mwSrch=v;renderMW()}
+function mwFilt(f,el){RT.mwF=f;document.querySelectorAll('#screen-mw .fc').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderMW()}
+function openEditTask(id){
+  const t=myTasks.find(x=>x.id===id);if(!t)return;
+  $('et-id').value=t.id;$('et-name').value=t.name;$('et-due').value=t.due;
+  // populate skill dropdown
+  $('et-skill').innerHTML=C.skills.map(s=>`<option value="${s.name}" ${s.name===t.skill?'selected':''}>${s.name} (${s.cat})</option>`).join('');
+  for(let o of $('et-pri').options)o.selected=(o.value===t.pri);
+  for(let o of $('et-status').options)o.selected=(o.value===t.status);
+  for(let o of $('et-section').options)o.selected=(o.value===t.sec);
+  openM('m-edittask');
+}
+function saveTask(){
+  const id=$('et-id').value;const t=myTasks.find(x=>x.id===id);if(!t)return;
+  const name=$('et-name').value.trim();if(!name){showNotif('Validation','Task name required.','');return;}
+  t.name=name;t.pri=$('et-pri').value;t.status=$('et-status').value;
+  t.due=$('et-due').value||t.due;t.sec=$('et-section').value;t.skill=$('et-skill').value||'—';
+  t.dueC=t.due.toLowerCase().includes('overdue')?'ov':t.due.toLowerCase().includes('today')?'wn':'';
+  closeM('m-edittask');renderMW();
+  audit('Ganguly','TASK_EDITED',`Task ${id} updated: ${name}`,'Task');
+  showNotif('Task Updated',`${id} saved.`,'g');
+}
+function markDone(id){
+  const t=myTasks.find(x=>x.id===id);if(!t)return;
+  t.status='COMPLETED';t.sec='Completed';t.dueC='';
+  audit('Ganguly','TASK_COMPLETED',`${id} marked complete: ${t.name}`,'Task');
+  actPush(`<strong>${id}</strong> marked complete`,'g');
+  renderMW();showNotif('Completed',`${id} done.`,'g');
+}
+function deleteTask(id){
+  const idx=myTasks.findIndex(x=>x.id===id);if(idx===-1)return;
+  const name=myTasks[idx].name;myTasks.splice(idx,1);
+  closeM('m-edittask');renderMW();
+  audit('Ganguly','TASK_DELETED',`${id} deleted: ${name}`,'Task');
+  showNotif('Deleted',`${id} removed.`,'');
+}
+function createTask(){
+  const name=$('nt-name').value.trim();if(!name){showNotif('Validation','Task name required.','');return;}
+  const pri=$('nt-pri').value;
+  const dueDt=$('nt-due').value;
+  const due=dueDt?new Date(dueDt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'No due date';
+  const skill=$('nt-skill').value||'—';
+  const sec=$('nt-section').value;
+  const id='TSK-'+(tCnt++);
+  myTasks.push({id,name,wf:'—',skill,due,dueC:'',status:'PENDING',pri:pri.toLowerCase(),sec});
+  closeM('m-newtask');$('nt-name').value='';
+  renderMW();
+  audit('Ganguly','TASK_CREATED',`${id} created: ${name}`,'Task');
+  showNotif('Task Created',`${id} added to ${sec}.`,'g');
+}
+
+/* ════ WORKFLOWS ════ */
+function renderWF(){
+  let ins=[...RT.instances];
+  const q=RT.wfSrch.toLowerCase();
+  if(RT.wfSF!=='all')ins=ins.filter(i=>i.status===RT.wfSF);
+  if(q)ins=ins.filter(i=>i.id.toLowerCase().includes(q)||i.name.toLowerCase().includes(q)||i.desc.toLowerCase().includes(q));
+  if(RT.wfSrt==='priority'){const p={CRITICAL:0,HIGH:1,MEDIUM:2,LOW:3};ins.sort((a,b)=>p[a.pri]-p[b.pri]);}
+  if(RT.wfSrt==='sla')ins.sort((a,b)=>b.slaUsed-a.slaUsed);
+  $('wf-sub').textContent=`${ins.length} instances shown · ${RT.instances.length} total`;
+  $('nb-wf').textContent=RT.instances.length;
+  if(!ins.length){$('wf-list').innerHTML=`<div class="empty"><div class="em-m">○</div><div class="em-t">No workflows match</div></div>`;return;}
+  $('wf-list').innerHTML=ins.map(inst=>{
+    const dept=C.departments.find(d=>d.id===inst.dept);
+    const stage=inst.stages[inst.si]||inst.stages[0];
+    const sc=slaC(inst.slaUsed);
+    const pips=inst.stages.map((_,i)=>`<div class="spip${i<inst.si?' d':i===inst.si?' a':''}"></div>`).join('');
+    return `<div class="wfr" onclick="openWDP('${inst.id}')">
+      <span class="mono" style="font-size:9px;color:var(--t3)">${inst.id}</span>
+      <div><div style="font-size:12.5px;font-weight:600;color:var(--t1)">${inst.name}</div><div class="mono" style="font-size:9px;color:var(--t3)">${inst.desc}</div></div>
+      <span style="font-size:11px;color:var(--t2)">${dept?dept.name:'—'}</span>
+      <div><div style="font-size:11.5px;font-weight:600;color:var(--t1);margin-bottom:3px">${stage}</div><div class="spips">${pips}</div></div>
+      <span class="stag ${stC(inst.status)}">${stL(inst.status)}</span>
+      <div class="slab"><div class="slab-t"><div class="slab-f sf-${sc}" style="width:${inst.slaUsed}%"></div></div><div class="slab-l">${inst.slaUsed}% of ${inst.slaH}h</div></div>
+      <div><span class="pd ${pdC(inst.pri.toLowerCase())}"></span><span class="mono" style="font-size:9px;color:var(--t2);margin-left:5px">${inst.pri}</span></div>
+    </div>`;
+  }).join('');
+}
+function wfSearch(v){RT.wfSrch=v;renderWF()}
+function wfFilt(s,el){RT.wfSF=s;document.querySelectorAll('#screen-wf .fc:not([onclick*="Sort"])').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderWF()}
+function wfSort(s){RT.wfSrt=s;renderWF()}
+function initWF(){
+  const defId=$('wf-type-sel').value;
+  const desc=$('wf-desc').value||'New workflow';
+  const pri=$('wf-pri').value;
+  const req=$('wf-req').value||'Ganguly';
+  const def=C.wfDefs.find(d=>d.id===defId);if(!def)return;
+  const id='WF-'+RT.nextInst++;
+  RT.instances.unshift({id,defId,name:def.name,dept:def.dept,stages:def.stages,si:0,status:'IN_PROGRESS',pri,desc,req,slaH:def.slaH,slaUsed:2});
+  closeM('m-newwf');
+  audit('Ganguly','WORKFLOW_CREATED',`${id} initiated — ${def.name}`,'WorkflowInstance');
+  actPush(`<strong>${id}</strong> initiated — ${def.name}`,'b');
+  renderWF();renderCT();
+  showNotif('Workflow Initiated',`${id} — ${def.name}`,'g');
+}
+
+/* ════ BOTTLENECKS ════ */
+function renderBN(){
+  let bns=bnData();
+  if(RT.bnSort)bns.sort((a,b)=>({c:0,w:1,m:2}[a.sev])-({c:0,w:1,m:2}[b.sev]));
+  $('bn-list').innerHTML=bns.map(bn=>{
+    const sigs=bn.signals.map(s=>`<div class="bn-sig tw"><div class="bn-sl">${s.l}</div><div class="bn-sv ${s.c}">${s.v}</div><div class="tip">${s.l}: ${s.v}</div></div>`).join('');
+    const steps=bn.fix.steps.map(s=>`<div class="bn-fs"><div class="bn-fsl">${s.l}</div><div class="bn-fst">${s.t}</div></div>`).join('');
+    return `<div class="bn-card">
+      <div class="bn-top2">
+        <div class="bn-bar ${bn.sev}"></div>
+        <div class="bn-body">
+          <div class="bn-rt">
+            <div>
+              <div class="bn-dept">${bn.dept} · ${bn.id}</div>
+              <div class="bn-title">${bn.stage}</div>
+              <div class="bn-sym">${bn.symptom}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:20px">
+              <div class="bn-qbig">${bn.q}</div><div class="bn-ql">items queued</div>
+            </div>
+          </div>
+          <div class="bn-sigs">${sigs}</div>
+          <div class="bn-ab"><div class="bn-al">Analysis</div><div class="bn-at">${bn.analysis}</div></div>
+          <div class="bn-ab"><div class="bn-al">Potential Cause</div><div class="bn-at">${bn.cause}</div></div>
+          <div class="bn-impact"><strong>Impact:</strong> ${bn.impact}</div>
+          <div class="bn-fix">
+            <div class="bn-fh"><span class="bn-ft">Fix Advisory</span><span class="bn-fe">${bn.fix.eta}</span></div>
+            ${steps}
+          </div>
+          <div class="bn-foot">
+            <span class="mono" style="font-size:8.5px;color:var(--t3);margin-right:4px">Required Skills:</span>
+            ${bn.reqSkills.map(s=>`<span class="bskl" onclick="navigate('al')">${s}</span>`).join('')}
+            <button class="btn btn-s" style="margin-left:auto" onclick="navigate('al')">Allocation Advisory →</button>
+            <button class="btn btn-g" onclick="showNotif('What-If','Configure scenario in Allocation screen.','')">What-If</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function sortBN(){RT.bnSort=!RT.bnSort;renderBN()}
+
+/* ════ ALLOCATION ════ */
+function renderAL(){
+  $('al-list').innerHTML=allocData().map(adv=>{
+    const acc=RT.allocAcc[adv.taskId];
+    const sc=adv.slaC==='c'?'rd':adv.slaC==='w'?'am':'sg';
+    const cands=adv.cands.map(c=>{
+      const sfC=c.sf>=80?'sf-hi':c.sf>=60?'sf-md':'sf-lo';
+      const capFree=100-c.cap;const capC=capFree>=40?'sf-hi':capFree>=20?'sf-md':'sf-lo';
+      return `<tr class="${c.rec?'rec':''}">
+        <td><div class="cn">${c.name}</div><div class="cr">${c.role} · ${c.id}</div></td>
+        <td><div class="srow"><div class="str"><div class="sfi ${sfC}" style="width:${c.sf}%"></div></div><span class="sv">${c.sf}%</span></div></td>
+        <td><div class="srow"><div class="str"><div class="sfi ${capC}" style="width:${capFree}%"></div></div><span class="sv">${capFree}%</span></div></td>
+        <td class="mono" style="font-size:10px;color:var(--${c.bn==='High'?'sg':c.bn==='Medium'?'am':'t3'})">${c.bn}</td>
+        <td class="mono" style="font-size:13px;font-weight:500;color:var(--t1)">${c.sc}</td>
+        <td>${c.rec?'<span class="crec">ADVISORY</span>':''}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="ac">
+      <div class="ac-hdr">
+        <div><div class="ac-title">${adv.taskName} — ${adv.wfName}</div><div class="ac-sub">${adv.wfId} · ${adv.taskId}</div></div>
+        <div class="ac-sla"><div class="ac-slal">SLA Remaining</div><div class="ac-slav" style="color:var(--${sc})">${adv.slaRem}</div></div>
+      </div>
+      <div class="ac-ctx">
+        <div><div class="acl">Required Skill</div><div class="acv">${adv.reqSkill}</div></div>
+        <div><div class="acl">Bottleneck</div><div class="acv ${adv.bn!=='None active'?'w':''}">${adv.bn}</div></div>
+        <div><div class="acl">Current Owner</div><div class="acv ${adv.owner.includes('loaded')?'c':''}">${adv.owner}</div></div>
+        <div><div class="acl">Required Role</div><div class="acv">${adv.reqRole}</div></div>
+      </div>
+      <table class="ct2">
+        <thead><tr><th>Candidate</th><th>Skill Fit</th><th>Available Cap.</th><th>BN Relief</th><th>Score</th><th></th></tr></thead>
+        <tbody>${cands}</tbody>
+      </table>
+      <div class="ac-reason"><span>Advisory Basis</span>${adv.reason}</div>
+      ${acc
+        ?`<div class="ac-done">✓ Advisory accepted — ${acc} assigned. Recorded in audit trail.</div>`
+        :`<div class="ac-foot">
+          <button class="btn btn-p" onclick="acceptAlloc('${adv.taskId}','${adv.cands.find(c=>c.rec).id}','${adv.cands.find(c=>c.rec).name}')">Accept Advisory</button>
+          <button class="btn btn-s" onclick="$('m-override').dataset.task='${adv.taskId}';openM('m-override')">Override</button>
+          <button class="btn btn-g">Dismiss</button>
+          <button class="btn btn-g" style="margin-left:auto" onclick="showNotif('What-If','Configure scenario parameters in Analytics.','')">What-If Sim</button>
+        </div>`}
+    </div>`;
+  }).join('');
+}
+function acceptAlloc(taskId,empId,name){
+  RT.allocAcc[taskId]=name;
+  audit('Ganguly','ALLOCATION_ACCEPTED',`Advisory accepted: ${empId} (${name}) → ${taskId}`,'Allocation');
+  actPush(`Allocation accepted — <strong>${name}</strong> assigned to ${taskId}`,'g');
+  renderAL();showNotif('Allocation Accepted',`${name} assigned. Audit record created.`,'g');
+}
+function submitOverride(){
+  const reason=$('or-reason').value.trim();
+  if(!reason){showNotif('Validation','Override reason required.','');return;}
+  const assignee=$('or-assignee').value.trim();
+  const taskId=$('m-override').dataset.task||'—';
+  audit('Ganguly','ALLOCATION_OVERRIDE',`Override on ${taskId}. Assigned: ${assignee||'unspecified'}. Reason: ${reason}`,'Allocation');
+  RT.allocAcc[taskId]=assignee+' (override)';
+  closeM('m-override');renderAL();
+  showNotif('Override Recorded','Decision logged in audit trail.','');
+}
+
+/* ════ WORKFORCE ════ */
+function renderWK(){
+  const q=RT.wkSrch.toLowerCase();const f=RT.wkF;
+  let emps=C.employees.filter(e=>{
+    if(q&&!e.name.toLowerCase().includes(q)&&!e.id.toLowerCase().includes(q))return false;
+    if(f==='overloaded')return ut(e)>85;
+    if(f==='available')return ut(e)<=50;
+    if(f!=='all')return e.dept===f;
+    return true;
+  });
+  $('wk-rows').innerHTML=emps.map(e=>{
+    const u=ut(e);const uc=utC(u);const us=utS(u);
+    const dept=C.departments.find(d=>d.id===e.dept);
+    const skls=e.skills.slice(0,3).map(sk=>{
+      const skd=C.skills.find(x=>x.id===sk.s);
+      return `<span class="sk ${sk.l==='Advanced'?'adv':sk.l==='Intermediate'?'int':''}" onclick="showNotif('Skill','${skd?skd.name:sk.s} — ${sk.l} level','b')">${skd?skd.name:sk.s}</span>`;
+    }).join('');
+    return `<div class="erow" onclick="showNotif('${e.name}','${e.id} · ${ut(e)}% utilised · ${Math.max(0,e.cap-e.com).toFixed(1)}h available','b')">
+      <div><div class="en">${e.name}</div><div class="eid">${e.id}</div></div>
+      <div>${skls}</div>
+      <div class="mono" style="font-size:11px;color:var(--t2)">${Math.round(e.com)}</div>
+      <div class="uw"><div class="utr" style="min-width:80px"><div class="ufi ${uc}" style="width:${Math.min(100,u)}%"></div></div><span class="upc">${u}%</span></div>
+      <div class="mono" style="font-size:11px;color:var(--t2)">${Math.max(0,e.cap-e.com).toFixed(1)}h</div>
+      <div><span class="stag ${us.c}">${us.l}</span></div>
+      <div style="font-size:11px;color:var(--t2)">${dept?dept.name:'—'}</div>
+    </div>`;
+  }).join('');
+}
+function wkSearch(v){RT.wkSrch=v;renderWK()}
+function wkFilt(f,el){RT.wkF=f;document.querySelectorAll('#screen-wk .fc').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderWK()}
+function addEmp(){
+  const name=$('ae-name').value.trim();const id=$('ae-id').value.trim();
+  if(!name||!id){showNotif('Validation','Name and Employee ID required.','');return;}
+  if(C.employees.find(e=>e.id===id)){showNotif('Duplicate','Employee ID already exists.','');return;}
+  C.employees.push({id,name,role:$('ae-role').value,dept:$('ae-dept').value,skills:[],cap:parseFloat($('ae-cap').value)||8,com:parseFloat($('ae-com').value)||0});
+  audit('Ganguly','EMPLOYEE_ADDED',`${name} (${id}) added to workforce.`,'Employee');
+  closeM('m-addemp');renderWK();
+  showNotif('Employee Added',`${name} added.`,'g');
+}
+
+/* ════ ANALYTICS ════ */
+function renderAN(){
+  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const thrD=[142,158,134,171,163,189,176,201,188,213,196,221];
+  const slaD=[94,91,88,92,89,85,90,87,93,91,88,94];
+  const bnD=[2,3,4,2,5,6,3,4,7,5,4,5];
+  const utD=[71,74,79,76,82,85,80,83,87,84,88,86];
+
+  const spkl=(data,cls,mx,unit='')=>data.map((v,i)=>{
+    const h=Math.max(4,Math.round((v/mx)*52));
+    return `<div class="spkb ${cls} tw" style="height:${h}px;opacity:0.75"><div class="tip">${M[i]}: ${v}${unit}</div></div>`;
+  }).join('');
+  const clbls=()=>M.map(m=>`<span class="clbl">${m}</span>`).join('');
+  const barRow=(lbl,v,mx,cls,unit='')=>`<div class="brow tw">
+    <span class="brl">${lbl}</span>
+    <div class="brt"><div class="brf spkb ${cls}" style="width:${Math.round(v/mx*100)}%;height:100%"></div></div>
+    <span class="brv" style="color:var(--${cls==='r'?'rd':cls==='w'?'am':'sg'})">${v}${unit}</span>
+    <div class="tip">${lbl}: ${v}${unit}</div>
+  </div>`;
+
+  $('an-grid').innerHTML=`
+    <div class="anw full">
+      <div class="ant">Workflow Throughput — Monthly Completions</div>
+      <div style="display:flex;align-items:flex-end;gap:24px">
+        <div><div class="bnum">221</div><div class="bnums">Nov (latest) · +12.8% vs Oct</div></div>
+        <div style="flex:1"><div class="spkl">${spkl(thrD,'g',250)}</div><div class="clbls">${clbls()}</div></div>
+      </div>
+    </div>
+    <div class="anw">
+      <div class="ant">SLA Compliance Rate (%)</div>
+      <div class="bnum">88</div>
+      <div class="bnums">Target: 92% · Gap: −4pp · Procurement is primary drag</div>
+      <div class="spkl" style="margin-top:14px">${slaD.map((v,i)=>{
+        const h=Math.max(4,Math.round((v-80)/14*52));
+        const c=v>=90?'g':v>=85?'w':'r';
+        return `<div class="spkb ${c} tw" style="height:${h}px;opacity:0.75"><div class="tip">${M[i]}: ${v}%</div></div>`;
+      }).join('')}</div>
+      <div class="clbls">${clbls()}</div>
+    </div>
+    <div class="anw">
+      <div class="ant">Bottleneck Frequency — Detections per Month</div>
+      <div class="bnum">5</div>
+      <div class="bnums">Avg detections · Procurement: most frequent origin</div>
+      <div class="spkl" style="margin-top:14px">${spkl(bnD,'w',8)}</div>
+      <div class="clbls">${clbls()}</div>
+    </div>
+    <div class="anw">
+      <div class="ant">Avg Workforce Utilisation (%)</div>
+      <div class="bnum">84<span style="font-size:18px;color:var(--t3)">%</span></div>
+      <div class="bnums">Org average · 3 depts above 90% threshold</div>
+      <div class="spkl" style="margin-top:14px">${utD.map((v,i)=>{
+        const h=Math.max(4,Math.round((v-65)/25*52));
+        const c=v>87?'r':v>82?'w':'g';
+        return `<div class="spkb ${c} tw" style="height:${h}px;opacity:0.75"><div class="tip">${M[i]}: ${v}%</div></div>`;
+      }).join('')}</div>
+      <div class="clbls">${clbls()}</div>
+    </div>
+    <div class="anw">
+      <div class="ant">Skill Constraint Index</div>
+      ${barRow('SAP MM Advanced',84,100,'r','%')}
+      ${barRow('SAP FI',71,100,'w','%')}
+      ${barRow('Quality Inspection',62,100,'w','%')}
+      ${barRow('SAP WM',48,100,'g','%')}
+      ${barRow('Procurement',39,100,'g','%')}
+      ${barRow('Financial Analysis',33,100,'g','%')}
+      <div class="mono" style="font-size:9px;color:var(--t3);margin-top:10px">Constraint = qualified demand ÷ qualified available capacity</div>
+    </div>
+    <div class="anw">
+      <div class="ant">Process Cycle Time vs SLA — Average Hours</div>
+      ${[['PR Approval',52,48,'r'],['Invoice Approval',69,72,'g'],['Goods Receipt',19,24,'g'],['Stock Transfer',28,36,'g'],['Quality NCR',41,48,'w'],['Sales Order',18,24,'g']]
+        .map(([n,a,t,c])=>`<div class="brow tw" style="margin-bottom:9px">
+          <span class="brl">${n}</span>
+          <div class="brt"><div class="brf spkb ${c}" style="width:${Math.min(100,Math.round(a/t*100))}%;height:100%"></div></div>
+          <span class="brv" style="color:var(--${c==='r'?'rd':c==='w'?'am':'sg'})">${a}h/${t}h</span>
+          <div class="tip">${n}: ${a}h actual vs ${t}h SLA</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ════ ADMIN ════ */
+let aTabActive='depts';
+function aTab(el,tab){document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));el.classList.add('on');aTabActive=tab;renderAD()}
+function renderAD(){
+  const c=$('ad-body');
+  if(aTabActive==='depts'){
+    c.innerHTML=`<table class="admt"><thead><tr><th>ID</th><th>Department</th><th>Head</th><th>Headcount</th><th></th></tr></thead><tbody>
+      ${C.departments.map(d=>`<tr onclick="showNotif('${d.name}','Head: ${d.head} · ${d.hc} staff','b')">
+        <td class="pr mono">${d.id}</td><td class="pr">${d.name}</td><td>${d.head}</td><td class="mono">${d.hc}</td>
+        <td><button class="btn btn-g" style="padding:2px 8px" onclick="event.stopPropagation();showNotif('Edit','Inline editing in production build.','')">Edit</button></td>
+      </tr>`).join('')}</tbody></table>
+      <button class="adm-add" onclick="addDept()">+ Add Department</button>`;
+  } else if(aTabActive==='wfdefs'){
+    c.innerHTML=`<table class="admt"><thead><tr><th>ID</th><th>Workflow</th><th>Department</th><th>Stages</th><th>SLA</th><th>Trigger</th><th></th></tr></thead><tbody>
+      ${C.wfDefs.map(w=>{const d=C.departments.find(x=>x.id===w.dept);return`<tr onclick="showNotif('${w.name}','${w.stages.length} stages · ${w.slaH}h SLA · ${w.trigger}','b')">
+        <td class="pr mono">${w.id}</td><td class="pr">${w.name}</td><td>${d?d.name:w.dept}</td>
+        <td class="mono">${w.stages.length}</td><td class="mono">${w.slaH}h</td><td class="mono">${w.trigger}</td>
+        <td><button class="btn btn-g" style="padding:2px 8px" onclick="event.stopPropagation();aTab(document.querySelectorAll('.atab')[6],'designer')">Design</button></td>
+      </tr>`}).join('')}</tbody></table>
+      <button class="adm-add">+ Define New Workflow</button>`;
+  } else if(aTabActive==='skills'){
+    c.innerHTML=`<table class="admt"><thead><tr><th>ID</th><th>Skill</th><th>Category</th><th></th></tr></thead><tbody>
+      ${C.skills.map(s=>`<tr onclick="showNotif('${s.name}','Category: ${s.cat}','b')">
+        <td class="pr mono">${s.id}</td><td class="pr">${s.name}</td><td>${s.cat}</td>
+        <td><button class="btn btn-g" style="padding:2px 8px" onclick="event.stopPropagation();showNotif('Edit','Skill editing in production build.','')">Edit</button></td>
+      </tr>`).join('')}</tbody></table>
+      <button class="adm-add" onclick="addSkill()">+ Add Skill</button>`;
+  } else if(aTabActive==='roles'){
+    c.innerHTML=`<table class="admt"><thead><tr><th>ID</th><th>Role</th><th>Department</th><th></th></tr></thead><tbody>
+      ${C.roles.map(r=>{const d=C.departments.find(x=>x.id===r.dept);return`<tr>
+        <td class="pr mono">${r.id}</td><td class="pr">${r.name}</td><td>${d?d.name:r.dept}</td>
+        <td><button class="btn btn-g" style="padding:2px 8px" onclick="showNotif('Edit','Role editing in production build.','')">Edit</button></td>
+      </tr>`}).join('')}</tbody></table>
+      <button class="adm-add" onclick="addRole()">+ Add Role</button>`;
+  } else if(aTabActive==='sla'){
+    c.innerHTML=`<table class="admt"><thead><tr><th>ID</th><th>Workflow</th><th>Warn At</th><th>Critical At</th><th>Escalate At</th><th>Escalate To</th><th></th></tr></thead><tbody>
+      ${C.slaPolicy.map(s=>{const w=C.wfDefs.find(x=>x.id===s.wf);return`<tr onclick="showNotif('SLA Policy','${w?w.name:s.wf} · Warn ${s.warnPct}% → Critical ${s.critPct}% → Escalate ${s.escPct}%','w')">
+        <td class="pr mono">${s.id}</td><td class="pr">${w?w.name:s.wf}</td>
+        <td class="mono">${s.warnPct}%</td><td class="mono" style="color:var(--am)">${s.critPct}%</td>
+        <td class="mono" style="color:var(--rd)">${s.escPct}%</td><td class="mono">${s.escTo}</td>
+        <td><button class="btn btn-g" style="padding:2px 8px" onclick="event.stopPropagation();showNotif('Edit','SLA policy editing in production build.','')">Edit</button></td>
+      </tr>`}).join('')}</tbody></table>
+      <button class="adm-add">+ Add SLA Policy</button>`;
+  } else if(aTabActive==='policy'){
+    c.innerHTML=`<div style="max-width:560px">
+      <div class="mono" style="font-size:10px;color:var(--t2);margin-bottom:18px">Active: <strong style="color:var(--t1)">${C.allocPolicy.name}</strong> · v${C.allocPolicy.version}</div>
+      ${C.allocPolicy.factors.map((f,i)=>`<div class="pr-row">
+        <span class="pr-lbl">${f.f}</span>
+        <input class="pr-inp" type="number" value="${f.w}" min="0" max="100" oninput="upW(${i},this.value)">
+        <span class="mono" style="font-size:10px;color:var(--t3)">%</span>
+        <div class="pr-tr" style="min-width:120px"><div class="pr-fi" id="pfi-${i}" style="width:${f.w}%"></div></div>
+      </div>`).join('')}
+      <div class="pt ${C.allocPolicy.factors.reduce((a,b)=>a+b.w,0)===100?'ok':'er'}" id="pt-total">Total: ${C.allocPolicy.factors.reduce((a,b)=>a+b.w,0)}%</div>
+      <div style="margin-top:16px"><button class="btn btn-p" onclick="savePol()">Save Policy</button></div>
+    </div>`;
+  } else if(aTabActive==='designer'){
+    const wf=C.wfDefs[0];
+    c.innerHTML=`<div style="margin-bottom:14px">
+      <div class="mono" style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:8px">Viewing: ${wf.name}</div>
+      <div class="fbar" style="margin-bottom:14px">${C.wfDefs.map(d=>`<button class="fc ${d.id===wf.id?'on':''}" onclick="showNotif('Designer','Full visual designer in production build.','b')">${d.name}</button>`).join('')}</div>
+    </div>
+    <div class="ds-wrap">
+      <div class="mono" style="font-size:9px;color:var(--t3);margin-bottom:14px">STAGE FLOW — click any stage to configure</div>
+      <div class="ds-flow" style="flex-wrap:wrap;gap:4px 0">${wf.stages.map((s,i)=>`<div class="ds-node">
+        <div class="dsb ${i<2?'dsd':i===2?'dsa':''}" onclick="showNotif('Stage Config','${s} — SLA, required role, and approval rules configurable in production build.','b')">
+          <div class="dsb-n">${s}</div><div class="dsb-r">${i===2?wf.reqRole:'—'}</div>
+        </div>${i<wf.stages.length-1?'<div class="ds-arr">→</div>':''}
+      </div>`).join('')}</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="showNotif('Add Stage','Drag-and-drop stage builder in production build.','b')">+ Add Stage</button>
+      <button class="btn btn-s" onclick="showNotif('Reorder','Drag to reorder in production build.','')">Reorder</button>
+      <button class="btn btn-s" onclick="showNotif('SLA','Link SLA policy in production build.','')">Configure SLA</button>
+      <button class="btn btn-s" onclick="showNotif('Approval Rules','Set conditional approval logic in production build.','')">Approval Rules</button>
+      <button class="btn btn-sg" onclick="showNotif('Activated','Workflow definition saved.','g');audit('Ganguly','WORKFLOW_DEF_SAVED','Workflow definition saved via designer.','Config')">Activate</button>
+    </div>`;
+  }
+}
+function upW(i,v){
+  C.allocPolicy.factors[i].w=parseInt(v)||0;
+  const fi=$('pfi-'+i);if(fi)fi.style.width=Math.min(100,C.allocPolicy.factors[i].w)+'%';
+  const tot=C.allocPolicy.factors.reduce((a,b)=>a+b.w,0);
+  const el=$('pt-total');if(el){el.textContent=`Total: ${tot}%`;el.className='pt '+(tot===100?'ok':'er');}
+}
+function savePol(){
+  const tot=C.allocPolicy.factors.reduce((a,b)=>a+b.w,0);
+  if(tot!==100){showNotif('Validation',`Weights must sum to 100. Current: ${tot}%.`,'');return;}
+  C.allocPolicy.version=(parseFloat(C.allocPolicy.version)+0.1).toFixed(1);
+  audit('Ganguly','POLICY_UPDATED',`Policy v${C.allocPolicy.version} saved. ${C.allocPolicy.factors.map(f=>f.f+' '+f.w+'%').join(', ')}`,'Config');
+  showNotif('Policy Saved',`v${C.allocPolicy.version} active.`,'g');
+}
+function savePolicy(){savePol();closeM('m-policy')}
+function addDept(){
+  const name=prompt('New department name:');if(!name)return;
+  const id='DEPT-'+String(C.departments.length+1).padStart(2,'0');
+  C.departments.push({id,name,head:'—',hc:0});C.deptStats[id]={active:0,risk:0,blocked:0};
+  audit('Ganguly','DEPT_ADDED',`Department ${name} (${id}) added.`,'Config');
+  renderAD();showNotif('Department Added',`${name} created.`,'g');
+}
+function addSkill(){
+  const name=prompt('New skill name:');if(!name)return;
+  const cat=prompt('Category:','Operations');if(!cat)return;
+  const id='SKL-'+String(C.skills.length+1).padStart(2,'0');
+  C.skills.push({id,name,cat});
+  audit('Ganguly','SKILL_ADDED',`${name} (${id}) added.`,'Config');
+  renderAD();showNotif('Skill Added',`${name} added to Skill Master.`,'g');
+}
+function addRole(){
+  const name=prompt('New role name:');if(!name)return;
+  const id='ROLE-'+String(C.roles.length+1).padStart(2,'0');
+  C.roles.push({id,name,dept:'DEPT-01'});
+  audit('Ganguly','ROLE_ADDED',`${name} (${id}) added.`,'Config');
+  renderAD();showNotif('Role Added',`${name} added.`,'g');
+}
+
+/* ════ INTEGRATIONS ════ */
+function renderIN(){
+  $('int-list').innerHTML=C.integrations.map(i=>`
+    <div class="int-row">
+      <div class="int-main" onclick="showNotif('${i.name}','${i.type} · ${i.events.toLocaleString()} events · Last sync: ${i.lastSync}','g')">
+        <div class="int-pulse"></div>
+        <div style="flex:1">
+          <div class="int-name">${i.name}</div>
+          <div class="int-type">${i.type} · ${i.events.toLocaleString()} events processed</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="mono" style="font-size:9px;color:var(--t3)">Last sync: ${i.lastSync}</span>
+          <span class="ibadge ${i.status==='active'?'act':i.status==='error'?'err':'ina'}">${i.status.toUpperCase()}</span>
+          <button class="btn btn-g" style="padding:2px 10px" onclick="event.stopPropagation();showNotif('Config','Integration configuration panel in production build.','b')">Config</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ════ AUDIT ════ */
+function renderAU(){
+  const q=RT.auSrch.toLowerCase();const f=RT.auF;
+  let logs=RT.auditLog.filter(l=>{
+    if(q&&!l.detail.toLowerCase().includes(q)&&!l.actor.toLowerCase().includes(q)&&!l.action.toLowerCase().includes(q))return false;
+    if(f!=='all'&&!l.entity.includes(f)&&!l.action.includes(f))return false;
+    return true;
+  });
+  $('au-rows').innerHTML=logs.length
+    ?logs.map(l=>`<div class="au-row" onclick="showNotif('Audit Entry','${l.action} by ${l.actor}','b')">
+        <span class="au-ts">${l.ts}</span><span class="au-ac">${l.actor}</span>
+        <span class="au-an">${l.action}</span><span class="au-d">${l.detail}</span>
+        <span class="au-e">${l.entity}</span>
+      </div>`).join('')
+    :`<div class="empty"><div class="em-t">No entries match</div></div>`;
+}
+function auSearch(v){RT.auSrch=v;renderAU()}
+function auFilt(f,el){RT.auF=f;document.querySelectorAll('#screen-au .fc').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderAU()}
+
+/* ════ NAVIGATION ════ */
+const meta={
+  ct:['CONTROL TOWER','Organisation Overview'],
+  mw:['MY WORK','Ayushmaan Ganguly · Active Tasks'],
+  wf:['WORKFLOWS','Active Instances'],
+  bn:['BOTTLENECKS','Multi-Signal Detection'],
+  al:['ALLOCATION ADVISORY','Advisory Engine'],
+  wk:['WORKFORCE','Capacity & Skills'],
+  an:['ANALYTICS','Historical & Strategic'],
+  ad:['CONFIGURATION','System Administration'],
+  in:['INTEGRATIONS','Enterprise Adapters'],
+  au:['AUDIT TRAIL','Decision Ledger'],
+};
+const renders={ct:renderCT,mw:renderMW,wf:renderWF,bn:renderBN,al:renderAL,wk:renderWK,an:renderAN,ad:renderAD,in:renderIN,au:renderAU};
+
+function navigate(s,filterVal){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
+  $('screen-'+s).classList.add('on');
+  document.querySelector(`[data-s="${s}"]`).classList.add('on');
+  const [t,cr]=meta[s]||[s.toUpperCase(),''];
+  $('tb-scr').textContent=t;
+  $('tb-crumb').innerHTML=`<span class="ca">${cr}</span>`;
+  if(filterVal&&s==='wf'){RT.wfSF=filterVal;}
+  if(renders[s])renders[s]();
+}
+document.querySelectorAll('.ni[data-s]').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.s)));
+
+/* ════ MODALS ════ */
+function openM(id){
+  if(id==='m-newwf')$('wf-type-sel').innerHTML=C.wfDefs.map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+  if(id==='m-addemp'){
+    $('ae-dept').innerHTML=C.departments.map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+    $('ae-role').innerHTML=C.roles.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+  }
+  if(id==='m-newtask'){
+    $('nt-skill').innerHTML=`<option value="—">— No specific skill —</option>`+C.skills.map(s=>`<option value="${s.name}">${s.name} (${s.cat})</option>`).join('');
+  }
+  if(id==='m-policy'){
+    $('pol-rows').innerHTML=C.allocPolicy.factors.map((f,i)=>`<div class="pr-row">
+      <span class="pr-lbl">${f.f}</span>
+      <input class="pr-inp" type="number" value="${f.w}" min="0" max="100" oninput="upWM(${i},this.value)">
+      <span class="mono" style="font-size:10px;color:var(--t3)">%</span>
+    </div>`).join('');
+    updPolTotal();
+  }
+  $(id).classList.add('on');
+}
+function upWM(i,v){C.allocPolicy.factors[i].w=parseInt(v)||0;updPolTotal()}
+function updPolTotal(){const tot=C.allocPolicy.factors.reduce((a,b)=>a+b.w,0);const el=$('pol-total');if(el){el.textContent=`Total: ${tot}%`;el.className='pt '+(tot===100?'ok':'er');}}
+function closeM(id){$(id).classList.remove('on')}
+document.querySelectorAll('.ovl').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
+
+/* ════ NOTIFS ════ */
+function showNotif(title,body,type){
+  const el=document.createElement('div');
+  el.className=`notif${type?' '+type:''}`;
+  el.innerHTML=`<div class="ntitle">${title}</div><div class="nbody">${body}</div>`;
+  $('notifs').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300)},4000);
+}
+
+/* ════ CLOCK ════ */
+function tick(){
+  const n=new Date();
+  $('clock').textContent=n.toLocaleTimeString('en-IN',{hour12:false});
+  $('ct-date')&&($('ct-date').textContent=n.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'}));
+}
+tick();setInterval(tick,1000);
+
+/* ════ LIVE SIM ════ */
+const liveA=[
+  ['SAP MM heartbeat — 14 events processed','b'],
+  ['WF-2049 advanced: Manager Approval → Procurement Review','g'],
+  ['SLA monitor: 43 items flagged across org','w'],
+  ['BN-01 update — queue now 31 items','r'],
+  ['EMP-003 completed task TSK-4388','g'],
+  ['All SAP adapters responding — integration health OK','g'],
+  ['WF-2062 Invoice Approval SLA at 76%','w'],
+  ['EMP-008 utilisation crossed 90% threshold','r'],
+  ['Allocation advisory generated for WF-2063','b'],
+  ['SAP WM event — STO-0552 triggered Stock Transfer workflow','b'],
+];
+let lIdx=0;
+setInterval(()=>{
+  const [t,c]=liveA[lIdx%liveA.length];lIdx++;
+  actPush(t,c);
+  if($('screen-ct').classList.contains('on')){
+    const feed=$('act-feed');
+    if(feed)feed.innerHTML=RT.actFeed.slice(0,8).map((a,i,arr)=>`
+      <div class="ai" onclick="navigate('au')">
+        <div class="al"><div class="adot ${a.color}"></div>${i<arr.length-1?'<div class="aconn"></div>':''}</div>
+        <div class="ab"><div class="at">${a.text}</div><div class="am2">${a.ts}</div></div>
+      </div>`).join('');
+  }
+},8000);
+
+/* ════ BOOT ════ */
+seed();
+renderCT();
+</script>
+</body>
+</html>
