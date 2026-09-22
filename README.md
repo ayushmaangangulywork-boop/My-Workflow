@@ -41,7 +41,7 @@ The product answers ten operational questions:
 
 
 ```
-## Architecture
+ Architecture
 
 CONFIGURATION STORE
         ↓
@@ -139,7 +139,7 @@ Amber is reserved exclusively for things requiring the user's attention — acti
 
 
 
-## Tech Stack
+ Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -150,7 +150,7 @@ Amber is reserved exclusively for things requiring the user's attention — acti
 
 
 
-## Production Roadmap
+ Production Roadmap
 
 | Phase | Scope | Estimate |
 |---|---|---|
@@ -163,7 +163,7 @@ Full schema, all technical decisions, and detailed roadmap in `/docs`.
 
 
 
-## Repository Structure
+ Repository Structure
 
 ```
 myworkflow/
@@ -178,7 +178,7 @@ myworkflow/
 
 
 
-## Why This Exists
+ Why This Exists
 
 Built as a portfolio piece demonstrating enterprise product thinking — not just UI skills.
 
